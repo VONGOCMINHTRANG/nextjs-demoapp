@@ -4,36 +4,28 @@ import { useState } from "react";
 import { auth } from "../../config/firebase";
 
 export default function SignIn() {
-    const [values, setValues] = useState({
-        email: '',
-        password: '',
-    })
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [userInfo, setUserInfo] = useState('')
-    const router = useRouter()
+  const router = useRouter();
 
-    const handleInputChange = (e: any) => {
-        e.preventDefault();
-        setValues({
-            ...values,
-            [e.target.name]: e.target.value
-        })
-    }
+  const handleInputChange = (e: any) => {
+    e.preventDefault();
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSignIn = async (e: any) => {
-    e.preventDefault()
-    // const credentials = await signInWithEmailAndPassword(
-    //     auth,
-    //     values.email,
-    //     values.password,
-    // )
-    // setUserInfo(credentials)
+    e.preventDefault();
+    await signInWithEmailAndPassword(auth, values.email, values.password);
 
-    console.log('data >> ', values);
-
-    // router.push('/')
-    console.log("Login successfully")
-  }
+    router.push("/");
+    console.log("Login successfully");
+  };
 
   return (
     <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -46,6 +38,7 @@ export default function SignIn() {
               className="block border border-grey-light w-full p-3 rounded mb-4"
               name="email"
               placeholder="Email"
+              onChange={handleInputChange}
             />
 
             <input
@@ -53,6 +46,7 @@ export default function SignIn() {
               className="block border border-grey-light w-full p-3 rounded mb-4"
               name="password"
               placeholder="Password"
+              onChange={handleInputChange}
             />
             <button
               type="submit"

@@ -29,9 +29,9 @@ export default function SignUp() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      const credentials = await createUserWithEmailAndPassword(
+      const credentials: any = await createUserWithEmailAndPassword(
         auth,
-        values.email,
+  values.email,
         values.password
       )
 
@@ -57,7 +57,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
         setUserInfo(currentUser)
       } else {
