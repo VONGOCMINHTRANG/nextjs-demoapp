@@ -1,31 +1,31 @@
-import { signInWithEmailAndPassword } from "@firebase/auth";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { auth } from "../../config/firebase";
+import { signInWithEmailAndPassword } from '@firebase/auth'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { auth } from '../../../config/firebase'
 
 export default function SignIn() {
   const [values, setValues] = useState({
-    email: "",
-    password: "",
-  });
+    email: '',
+    password: '',
+  })
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const handleInputChange = (e: any) => {
-    e.preventDefault();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
     setValues({
       ...values,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
-  const handleSignIn = async (e: any) => {
-    e.preventDefault();
-    await signInWithEmailAndPassword(auth, values.email, values.password);
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    await signInWithEmailAndPassword(auth, values.email, values.password)
 
-    router.push("/");
-    console.log("Login successfully");
-  };
+    router.push('/')
+    console.log('Login successfully')
+  }
 
   return (
     <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -59,15 +59,11 @@ export default function SignIn() {
 
         <div className="text-grey-dark mt-6">
           Create an Account?
-          <a
-            className="no-underline border-b border-blue text-blue"
-            href="../sign-up/"
-          >
+          <a className="no-underline border-b border-blue text-blue" href="/signup">
             Sign up
           </a>
-          .
         </div>
       </div>
     </div>
-  );
+  )
 }

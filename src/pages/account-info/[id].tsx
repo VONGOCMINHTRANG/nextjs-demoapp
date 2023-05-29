@@ -1,4 +1,7 @@
-export default function AccountInhtmlFormation() {
+import Layout from '@/components/layouts'
+import Head from 'next/head'
+
+export default function AccountInFormation() {
   return (
     <div className="bg-white">
       <div className="text-lg font-semibold text-black p-2 tracking-wider">
@@ -20,5 +23,16 @@ export default function AccountInhtmlFormation() {
         </div>
       </div>
     </div>
-  );
+  )
+}
+
+AccountInFormation.getLayout = function getLayout(page: any) {
+  return (
+    <Layout>
+      <Head>
+        <title>Account Information</title>
+      </Head>
+      {page}
+    </Layout>
+  )
 }

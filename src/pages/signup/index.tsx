@@ -1,37 +1,33 @@
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  updateProfile,
-} from "@firebase/auth";
-import { auth, db } from "../../config/firebase";
-import { useEffect, useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
-import { useRouter } from "next/router";
+import { createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from '@firebase/auth'
+import { auth, db } from '../../../config/firebase'
+import { useEffect, useState } from 'react'
+import { addDoc, collection } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 
 export default function SignUp() {
   const [values, setValues] = useState({
-    fullname: "",
-    email: "",
-    password: "",
+    fullname: '',
+    email: '',
+    password: '',
   })
 
-  const [userInfo, setUserInfo] = useState("");
-  const router = useRouter();
+  const [userInfo, setUserInfo] = useState('')
+  const router = useRouter()
 
-  const handleInputChange = (e: any) => {
-    e.preventDefault();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
     setValues({
       ...values,
       [e.target.name]: e.target.value,
     })
   }
 
-  const handleCreateUser = async (e) => {
-    e.preventDefault();
+  const handleCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
       const credentials: any = await createUserWithEmailAndPassword(
         auth,
-  values.email,
+        values.email,
         values.password
       )
 
@@ -40,7 +36,7 @@ export default function SignUp() {
       })
       setUserInfo(credentials)
 
-      const userRef = collection(db, "users");
+      const userRef = collection(db, 'users')
       await addDoc(userRef, {
         email: values.email,
         password: values.password,
@@ -50,20 +46,20 @@ export default function SignUp() {
       // console.log(userInfo);
       // console.log("handleCreateUser ~ user", user);
       router.push('/')
-      console.log("Create user successfully")
+      console.log('Create user successfully')
     } catch (error) {
       console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
         setUserInfo(currentUser)
       } else {
-        setUserInfo("")
+        setUserInfo('')
       }
-    });
+    })
   }, [])
 
   return (
@@ -105,15 +101,12 @@ export default function SignUp() {
 
         <div className="text-grey-dark mt-6">
           Already have an account?
-          <a
-            className="no-underline border-b border-blue text-blue"
-            href="../sign-in"
-          >
-            Log in
+          <a className="no-underline border-b border-blue text-blue" href="/signin">
+            Sign in
           </a>
           .
         </div>
       </div>
     </div>
-  );
+  )
 }
