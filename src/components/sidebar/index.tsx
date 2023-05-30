@@ -20,8 +20,11 @@ import { AiOutlineFieldTime, AiTwotoneSetting } from 'react-icons/ai'
 
 export default function Sidebar() {
   return (
-    <div className="text-sm font-semibold w-80 bg-white text-black/70 p-4 font-sans shadow-2xl">
-      <div className="p-1">
+    <div
+      className="text-sm font-semibold w-96 flex bg-white text-black/70 p-4 font-sans shadow-2xl relative 
+    overflow-y-scroll top-16"
+    >
+      <div className="p-1 flex flex-col flex-1">
         <ul>
           <li className="flex items-center gap-4 hover:text-green-500 cursor-pointer hover:bg-gray-100 hover:rounded-md p-2 mb-0.5">
             <IoLogoMicrosoft />

@@ -15,19 +15,19 @@ export default function AccountInFormation() {
         <IoIosArrowBack className="w-6 h-6" />
         <span>Trở về cài đặt</span>
       </div>
-      <div className=" flex flex-1 w-full flex-col rounded-xl h-screen">
-        <div className="text-md font-semibold text-black py-4 px-7 flex gap-12 bg-white">
+      <div className="flex flex-1 w-full flex-col">
+        <div className="text-md font-semibold text-black py-4 px-7 flex gap-12 bg-white rounded-t-xl">
           <span>Thông tin định danh</span>
           <span>Thông tin tài khoản</span>
         </div>
 
         <hr />
 
-        <div className="flex items-center flex-col bg-[#f7faff] rounded-md">
-          <div className="bg-white my-6 w-3/6">
+        <div className="flex items-center flex-col bg-[#f7faff] h-auto rounded-b-xl">
+          <div className="bg-white my-6 w-4/6">
             <div className="px-7 flex justify-between py-3">
               <div className="flex items-center gap-1">
-                <span className="font-medium">Thông tin tài khoản -</span>
+                <span className="font-medium text-black">Thông tin tài khoản -</span>
                 <div className="text-sm text-black/80">
                   Mã tài khoản: <span className="text-black/70">1234567890</span>
                 </div>
@@ -50,7 +50,7 @@ export default function AccountInFormation() {
                 <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Tên tài khoản</span>
                   <div className="flex gap-3">
-                    <span>PayME</span>
+                    <span className="text-black">PayME</span>
                     <FaRegEdit className="w-5 h-5 text-green-500" />
                   </div>
                 </li>

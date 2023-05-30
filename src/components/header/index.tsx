@@ -11,8 +11,8 @@ export default function Header() {
   // console.log('openUser >>', openUser)
 
   return (
-    <div className="bg-white shadow-md h-16 relative">
-      <div className="px-6 flex justify-between items-center h-full">
+    <div className="bg-white shadow-md py-3 w-full fixed h-16 z-30">
+      <div className="px-6 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <div className="rounded-xl w-10 h-10 items-center justify-center flex bg-gray-200">
             <BsShop className="w-6 h-6 text-gray-300" />
@@ -20,7 +20,7 @@ export default function Header() {
 
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="text-lg font-semibold">TK CỦA PAYME</span>
+              <span className="text-lg font-semibold text-black">TK CỦA PAYME</span>
               <BsCheckCircleFill className="w-4 h-4 text-green-500" />
             </div>
             <span className="text-xs font-semibold text-gray-400">MID : 123456</span>

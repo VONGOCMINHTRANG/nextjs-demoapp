@@ -20,9 +20,9 @@ export default function ChangePassword({ onClick = () => {} }) {
   if (portalDiv) {
     return createPortal(
       <div className="flex justify-center">
-        <div className="bg-white w-96 rounded-xl absolute z-20 flex flex-col top-12">
+        <div className="bg-white w-96 rounded-xl absolute z-50 flex flex-col top-12">
           <div className="p-4 flex items-center justify-between">
-            <span className=" text-lg font-medium">Đổi mật khẩu</span>
+            <span className="text-lg font-medium text-black">Đổi mật khẩu</span>
             <GrClose onClick={onClick} className="w-4 h-4 cursor-pointer" />
           </div>
 
