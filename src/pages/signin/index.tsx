@@ -1,7 +1,7 @@
-import { signInWithEmailAndPassword } from '@firebase/auth'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { auth } from '../../../config/firebase'
+import { signInWithEmailAndPassword } from '@firebase/auth'
 
 export default function SignIn() {
   const [values, setValues] = useState({

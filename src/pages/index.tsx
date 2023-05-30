@@ -37,7 +37,6 @@ export default function Home() {
   return (
     <div className="p-2">
       <div>Home</div>
-      <AccountInformation />
       <button onClick={handleSignOut} className="bg-red-400 rounded-sm px-2 py-1 text-white">
         Sign out
       </button>
