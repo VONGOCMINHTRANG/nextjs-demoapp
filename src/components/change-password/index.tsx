@@ -6,6 +6,9 @@ import { getAuth, signOut, updatePassword } from '@firebase/auth'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { setUserInfo } from '../../redux/slice/userSlice'
 
 export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
   const [portalDiv, setPortalDiv] = useState<Element | DocumentFragment | null>()
@@ -13,17 +16,38 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
   const router = useRouter()
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
+    reset,
   } = useForm({
     mode: 'onChange',
     defaultValues: { oldPassword: '', newPassword: '', retypePassword: '' },
   })
 
+  const user = useSelector((state: RootState) => state.user.userInfo)
+  const dispatch = useDispatch()
+
   const handleUpdatePassword = async (values: any) => {
-    console.log(values)
+    if (!isValid) return
+    if (values.oldPassword !== user?.password) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-right',
+        iconColor: 'red',
+        customClass: {
+          popup: 'colored-toast',
+        },
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      })
+      await Toast.fire({
+        icon: 'error',
+        title: `Your current password is not correct!`,
+      })
+      return
+    }
     if (values.newPassword != values.retypePassword) {
-      console.log('success')
       const Toast = Swal.mixin({
         toast: true,
         position: 'top-right',
@@ -42,21 +66,29 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
       return
     }
 
-    // const auth = getAuth()
-    // updatePassword(auth.currentUser as any, values.newPassword)
-    //   .then(() => {
-    //     console.log('success')
-    //     // router.push('/signin')
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     if (error.code == 'auth/requires-recent-login') {
-    //       signOut(auth)
-    //       router.push('/signin')
-    //     }
-    //   })
+    try {
+      const auth = getAuth()
+      await updatePassword(auth.currentUser as any, values.newPassword)
+        .then(() => {
+          Swal.fire('Your password has been updated!', '', 'success')
+          dispatch(setUserInfo({}))
+          router.push('/signin')
+        })
+        .catch((error) => {
+          // console.log(error)
+          if (error.code == 'auth/requires-recent-login') {
+            signOut(auth)
+            router.push('/signin')
+          }
+        })
+    } catch (error) {
+      Swal.fire({
+        title: 'Oops!',
+        text: 'Something went wrong!',
+        icon: 'error',
+      })
+    }
   }
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setPortalDiv(document.querySelector('body'))
@@ -77,37 +109,61 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
           <div className="py-2 px-6">
             <form onSubmit={handleSubmit(handleUpdatePassword)}>
               <div className="mb-4">
-                <label htmlFor="oldPassword" className="text-sm">
+                <label htmlFor="oldPassword" className="text-sm text-black">
                   Mật khẩu hiện tại
                 </label>
                 <input
                   type="password"
-                  name="oldPassword"
                   placeholder="Nhập mật khẩu hiện tại"
-                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5]"
+                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5] text-black"
+                  {...register('oldPassword', { required: true, minLength: 6 })}
                 />
+                {errors?.oldPassword?.type === 'required' && (
+                  <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                )}
+                {errors?.oldPassword?.type === 'minLength' && (
+                  <div className="text-red-500 text-xs italic">
+                    Mật khẩu phải gồm ít nhất 6 ký tự
+                  </div>
+                )}
               </div>
               <div className="mb-4">
-                <label htmlFor="newPassword" className="text-sm">
+                <label htmlFor="newPassword" className="text-sm text-black">
                   Mật khẩu mới
                 </label>
                 <input
                   type="password"
-                  name="newPassword"
                   placeholder="Nhập mật khẩu mới"
-                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5]"
+                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5] text-black"
+                  {...register('newPassword', { required: true, minLength: 6 })}
                 />
+                {errors?.newPassword?.type === 'required' && (
+                  <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                )}
+                {errors?.newPassword?.type === 'minLength' && (
+                  <div className="text-red-500 text-xs italic">
+                    Mật khẩu phải gồm ít nhất 6 ký tự
+                  </div>
+                )}
               </div>
               <div className="mb-4">
-                <label htmlFor="retypePassword" className="text-sm">
+                <label htmlFor="retypePassword" className="text-sm text-black">
                   Nhập lại mật khẩu mới
                 </label>
                 <input
                   type="password"
-                  name="retypePassword"
                   placeholder="Nhập lại mật khẩu mới"
-                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5]"
+                  className="p-2 text-base w-full mt-2 outline-none rounded-lg bg-[#e6ebf5] text-black"
+                  {...register('retypePassword', { required: true, minLength: 6 })}
                 />
+                {errors?.retypePassword?.type === 'required' && (
+                  <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                )}
+                {errors?.retypePassword?.type === 'minLength' && (
+                  <div className="text-red-500 text-xs italic">
+                    Mật khẩu phải gồm ít nhất 6 ký tự
+                  </div>
+                )}
               </div>
 
               <button

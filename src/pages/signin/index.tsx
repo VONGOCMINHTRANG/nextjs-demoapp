@@ -4,6 +4,9 @@ import { auth } from '../../../config/firebase'
 import { signInWithEmailAndPassword } from '@firebase/auth'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { setUserInfo } from '../../redux/slice/userSlice'
 
 export default function SignIn() {
   const [values, setValues] = useState({
@@ -18,6 +21,7 @@ export default function SignIn() {
   } = useForm({
     mode: 'onBlur',
   })
+  const dispatch = useDispatch()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -34,13 +38,19 @@ export default function SignIn() {
       const data = {
         email: values.email,
       }
+      const dataRedux = {
+        email: values.email,
+        password: values.password,
+      }
       if (localStorage.getItem('user') === null) {
         localStorage.setItem('user', JSON.stringify(data))
       }
+
+      dispatch(setUserInfo(dataRedux))
       router.push(`/account-info/${values.email}`)
       Swal.fire('Welcome back!', '', 'success')
     } catch (error: any) {
-      // console.log('error >> ', error.code)
+      console.log('error >> ', error)
       if (error.code === 'auth/invalid-email') {
         const Toast = Swal.mixin({
           toast: true,
@@ -73,6 +83,23 @@ export default function SignIn() {
         await Toast.fire({
           icon: 'error',
           title: 'Please enter your password!',
+        })
+      }
+      if (error.code === 'auth/wrong-password') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Your password is incorrect!',
         })
       }
       if (error.code === 'auth/user-not-found') {
