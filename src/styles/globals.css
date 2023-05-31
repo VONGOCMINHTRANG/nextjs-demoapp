@@ -18,10 +18,27 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
     rgb(var(--background-start-rgb));
+}
+
+.swal2-actions {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.swal2-confirm {
+  padding: 8px 15px;
+  font-size: 20px !important;
+}
+
+.swal2-cancel {
+  padding: 8px 15px;
+  font-size: 20px !important;
+}
+
+.swal2-title {
+  font-weight: 600;
+  font-size: 20px;
 }

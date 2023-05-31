@@ -16,7 +16,7 @@ export default function SignIn() {
     handleSubmit,
     formState: { isValid },
   } = useForm({
-    mode: 'onChange',
+    mode: 'onBlur',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ export default function SignIn() {
       router.push(`/account-info/${values.email}`)
       Swal.fire('Welcome back!', '', 'success')
     } catch (error: any) {
-      console.log('error >> ', error.code)
+      // console.log('error >> ', error.code)
       if (error.code === 'auth/invalid-email') {
         const Toast = Swal.mixin({
           toast: true,
@@ -72,7 +72,7 @@ export default function SignIn() {
         })
         await Toast.fire({
           icon: 'error',
-          title: 'Your password is not correct!',
+          title: 'Please enter your password!',
         })
       }
       if (error.code === 'auth/user-not-found') {
@@ -80,6 +80,23 @@ export default function SignIn() {
           title: 'Oops!',
           text: "We can't find your account!",
           icon: 'error',
+        })
+      }
+      if (error.code === ' auth/wrong-password') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Your password is not correct!',
         })
       }
     }

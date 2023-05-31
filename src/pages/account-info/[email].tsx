@@ -20,8 +20,6 @@ export default function AccountInFormation() {
   const router = useRouter()
   const emailUser = router.query.email
 
-  console.log(toggle)
-
   useEffect(() => {
     if (localStorage.getItem('user') === null) {
       router.push('/404')

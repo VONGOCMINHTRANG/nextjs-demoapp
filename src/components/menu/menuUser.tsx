@@ -12,9 +12,7 @@ import { setToggle } from '../../redux/slice/toggleSlice'
 export default function MenuUser() {
   const router = useRouter()
   const emailUser = router.query.email
-  const toggle = useSelector((state: RootState) => state.toggle.toggleState)
   const dispatch = useDispatch()
-  // console.log(toggle)
 
   const handleSignOut = () => {
     Swal.fire({
