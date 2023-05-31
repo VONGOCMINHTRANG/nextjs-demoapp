@@ -1,16 +1,13 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { GrClose } from 'react-icons/gr'
+import { IChangePW } from '../../interfaces'
 
-export default function ChangePassword({ onClick = () => {} }) {
+export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
   const [portalDiv, setPortalDiv] = useState<Element | DocumentFragment | null>()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // console.log('You are on the browser')
-      // console.log(document.title)
-      // console.log(document.getElementsByClassName('my-class'))
-
       setPortalDiv(document.querySelector('body'))
     }
   }, [])
@@ -20,7 +17,7 @@ export default function ChangePassword({ onClick = () => {} }) {
   if (portalDiv) {
     return createPortal(
       <div className="flex justify-center">
-        <div className="bg-white w-96 rounded-xl absolute z-50 flex flex-col top-12">
+        <div className="bg-white w-96 rounded-xl absolute z-50 flex flex-col top-12 transition-all">
           <div className="p-4 flex items-center justify-between">
             <span className="text-lg font-medium text-black">Đổi mật khẩu</span>
             <GrClose onClick={onClick} className="w-4 h-4 cursor-pointer" />

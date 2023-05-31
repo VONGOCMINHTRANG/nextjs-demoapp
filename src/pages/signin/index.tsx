@@ -2,14 +2,22 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { auth } from '../../../config/firebase'
 import { signInWithEmailAndPassword } from '@firebase/auth'
+import { useForm } from 'react-hook-form'
+import Swal from 'sweetalert2'
 
 export default function SignIn() {
   const [values, setValues] = useState({
+    fullname: '',
     email: '',
     password: '',
   })
-
   const router = useRouter()
+  const {
+    handleSubmit,
+    formState: { isValid },
+  } = useForm({
+    mode: 'onChange',
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -19,12 +27,62 @@ export default function SignIn() {
     })
   }
 
-  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    await signInWithEmailAndPassword(auth, values.email, values.password)
-
-    router.push('/')
-    console.log('Login successfully')
+  const handleSignIn = async () => {
+    if (!isValid) return
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password)
+      const data = {
+        email: values.email,
+      }
+      if (localStorage.getItem('user') === null) {
+        localStorage.setItem('user', JSON.stringify(data))
+      }
+      router.push(`/account-info/${values.email}`)
+      Swal.fire('Welcome back!', '', 'success')
+    } catch (error: any) {
+      console.log('error >> ', error.code)
+      if (error.code === 'auth/invalid-email') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Please enter an valid email!',
+        })
+      }
+      if (error.code === 'auth/missing-password') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Your password is not correct!',
+        })
+      }
+      if (error.code === 'auth/user-not-found') {
+        Swal.fire({
+          title: 'Oops!',
+          text: "We can't find your account!",
+          icon: 'error',
+        })
+      }
+    }
   }
 
   return (
@@ -32,7 +90,7 @@ export default function SignIn() {
       <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
         <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
           <h1 className="mb-8 text-3xl text-center">Sign in</h1>
-          <form onSubmit={handleSignIn}>
+          <form onSubmit={handleSubmit(handleSignIn)}>
             <input
               type="text"
               className="block border border-grey-light w-full p-3 rounded mb-4"

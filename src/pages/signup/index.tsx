@@ -3,6 +3,7 @@ import { auth, db } from '../../../config/firebase'
 import { useEffect, useState } from 'react'
 import { addDoc, collection } from 'firebase/firestore'
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
 
 export default function SignUp() {
   const [values, setValues] = useState({
@@ -11,7 +12,7 @@ export default function SignUp() {
     password: '',
   })
 
-  const [userInfo, setUserInfo] = useState('')
+  const [, setUserInfo] = useState('')
   const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,19 +37,107 @@ export default function SignUp() {
       })
       setUserInfo(credentials)
 
+      const data = {
+        email: values.email,
+      }
+      localStorage.setItem('user', JSON.stringify(data))
+
       const userRef = collection(db, 'users')
       await addDoc(userRef, {
+        fullname: values.fullname,
         email: values.email,
         password: values.password,
         id: credentials.user.uid,
       })
 
-      // console.log(userInfo);
-      // console.log("handleCreateUser ~ user", user);
-      router.push('/')
-      console.log('Create user successfully')
-    } catch (error) {
-      console.log(error)
+      router.push(`/account-info/${values.email}`)
+      Swal.fire('Congratulation!', 'Your accounted has been created successfully.', 'success')
+    } catch (error: any) {
+      if (values.fullname == '') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Please enter your fullname',
+        })
+      }
+      if (error.code === 'auth/email-already-in-use') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Sorry!Your email already in use!',
+        })
+      }
+      if (error.code === 'auth/invalid-email') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Please enter an valid email!',
+        })
+      }
+      if (error.code === 'auth/missing-password') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Your password is not correct!',
+        })
+      }
+      if (error.code === 'auth/weak-password') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'red',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        })
+        await Toast.fire({
+          icon: 'error',
+          title: 'Password should be at least 6 characters!',
+        })
+      }
     }
   }
 

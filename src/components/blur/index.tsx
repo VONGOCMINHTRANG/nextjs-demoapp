@@ -1,4 +1,6 @@
-export default function Blur({ onClick = () => {} }) {
+import { IBlur } from '../../interfaces'
+
+export default function Blur({ onClick = () => {} }: IBlur) {
   return (
     <>
       <div

@@ -2,12 +2,48 @@ import Head from 'next/head'
 import Layout from '../../components/layouts'
 import { IoIosArrowBack } from 'react-icons/io'
 import { FaRegEdit } from 'react-icons/fa'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Blur from '../../components/blur'
 import ChangePassword from '../../components/change-password'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { useRouter } from 'next/router'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { db } from '../../../config/firebase'
+import { setToggle } from '../../redux/slice/toggleSlice'
+import { IAccountInformation } from '../../interfaces'
 
 export default function AccountInFormation() {
-  const [changePW, setChangePW] = useState<boolean>(false)
+  const [userInfo, setUserInfo] = useState<IAccountInformation>({ email: '', fullname: '', id: '' })
+  const toggle = useSelector((state: RootState) => state.toggle.toggleState)
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const emailUser = router.query.email
+
+  console.log(toggle)
+
+  useEffect(() => {
+    if (localStorage.getItem('user') === null) {
+      router.push('/404')
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      if (!emailUser) return
+      const docRef = query(collection(db, 'users'), where('email', '==', emailUser))
+      onSnapshot(docRef, (snapshot) => {
+        snapshot.forEach((doc) => {
+          const email: string = doc.data().email
+          const fullname: string = doc.data().fullname
+          const id: string = doc.data().id
+          setUserInfo({ email, fullname, id })
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [emailUser])
 
   return (
     <div className="flex flex-col flex-1 cursor-pointer">
@@ -29,20 +65,21 @@ export default function AccountInFormation() {
               <div className="flex items-center gap-1">
                 <span className="font-medium text-black">Thông tin tài khoản -</span>
                 <div className="text-sm text-black/80">
-                  Mã tài khoản: <span className="text-black/70">1234567890</span>
+                  Mã tài khoản: <span className="text-black/70">{userInfo.id}</span>
                 </div>
               </div>
 
               <div
                 className="text-sm text-green-500 cursor-pointer"
-                onClick={() => setChangePW(true)}
+                onClick={() => dispatch(setToggle(true))}
               >
                 Đổi mật khẩu
               </div>
 
-              {changePW && <Blur onClick={() => setChangePW(false)}></Blur>}
-
-              {changePW && <ChangePassword onClick={() => setChangePW(false)}></ChangePassword>}
+              {toggle && <Blur onClick={() => dispatch(setToggle(false))}></Blur>}
+              {toggle && (
+                <ChangePassword onClick={() => dispatch(setToggle(false))}></ChangePassword>
+              )}
             </div>
             <hr />
             <div className="px-32 py-5">
@@ -50,14 +87,14 @@ export default function AccountInFormation() {
                 <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Tên tài khoản</span>
                   <div className="flex gap-3">
-                    <span className="text-black">PayME</span>
+                    <span className="text-black">{userInfo.fullname}</span>
                     <FaRegEdit className="w-5 h-5 text-green-500" />
                   </div>
                 </li>
                 <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Email</span>
                   <div className="flex gap-3">
-                    <span className="text-gray-400">payme@gmail.com</span>
+                    <span className="text-gray-400">{emailUser}</span>
                   </div>
                 </li>
                 <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
