@@ -15,10 +15,18 @@ import { IAccountInformation } from '../../interfaces'
 
 export default function AccountInFormation() {
   const [userInfo, setUserInfo] = useState<IAccountInformation>({ email: '', fullname: '', id: '' })
+  const [data, setData] = useState('')
   const toggle = useSelector((state: RootState) => state.toggle.toggleState)
   const dispatch = useDispatch()
   const router = useRouter()
   const emailUser = router.query.email
+
+  const generateQrCode = () => {
+    try {
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     if (localStorage.getItem('user') === null) {
@@ -57,8 +65,8 @@ export default function AccountInFormation() {
 
         <hr />
 
-        <div className="flex items-center flex-col bg-[#f7faff] h-auto rounded-b-xl">
-          <div className="bg-white my-6 w-4/6">
+        <div className="flex items-center bg-[#f7faff] h-auto rounded-b-xl">
+          <div className="bg-white my-6 w-4/6 mx-7">
             <div className="px-7 flex justify-between py-3">
               <div className="flex items-center gap-1">
                 <span className="font-medium text-black">Thông tin tài khoản -</span>
@@ -108,6 +116,26 @@ export default function AccountInFormation() {
                   </div>
                 </li>
               </ul>
+            </div>
+          </div>
+
+          <div className="position-relative text-black flex items-center flex-col">
+            <div className="flex justify-center font-medium">MÃ QR CỦA BẠN</div>
+            <img src="/default-qr.png" className="w-44 h-44 mb-4 opacity-40" alt="" />
+            <div className="flex gap-3 text-white text-sm">
+              <button
+                type="submit"
+                className="bg-blue-600 p-2 rounded-md hover:bg-blue-500 transition-all"
+                onClick={generateQrCode}
+              >
+                Tạo mã
+              </button>
+              <button
+                type="button"
+                className="bg-green-600 p-2 rounded-md hover:bg-green-500 transition-all"
+              >
+                Upload hình có sẵn
+              </button>
             </div>
           </div>
         </div>
