@@ -32,15 +32,10 @@ export default function SignUp() {
         values.password
       )
 
-      await updateProfile(auth.currentUser, {
+      await updateProfile(auth.currentUser as any, {
         displayName: values.fullname,
       })
       setUserInfo(credentials)
-
-      const data = {
-        email: values.email,
-      }
-      localStorage.setItem('user', JSON.stringify(data))
 
       const userRef = collection(db, 'users')
       await addDoc(userRef, {

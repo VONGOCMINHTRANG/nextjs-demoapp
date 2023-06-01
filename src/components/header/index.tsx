@@ -4,24 +4,23 @@ import { BsPersonCircle, BsShop, BsCheckCircleFill } from 'react-icons/bs'
 import MenuUser from '../menu/menuUser'
 import { useEffect, useState } from 'react'
 import MenuLanguage from '../menu/menuLanguage'
-import { useRouter } from 'next/router'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../../../config/firebase'
 import useClickUser from '../../hooks/useClickUser'
 import useClickLanguage from '../../hooks/useClickLanguage'
+import { useAuth } from '../../context/auth-context'
 
 export default function Header() {
+  const { userInfo } = useAuth()
   const [name, setName] = useState<string>('')
   const [openLanguage, setOpenLanguage] = useState<boolean>(false)
   const { showUser, userRef } = useClickUser()
   const { showLanguage, languageRef } = useClickLanguage()
-  const router = useRouter()
-  const emailUser = router.query.email
 
   useEffect(() => {
     try {
-      if (!emailUser) return
-      const docRef = query(collection(db, 'users'), where('email', '==', emailUser))
+      if (!userInfo) return
+      const docRef = query(collection(db, 'users'), where('email', '==', userInfo.email))
       onSnapshot(docRef, (snapshot) => {
         snapshot.forEach((doc) => {
           setName(doc.data().fullname.toUpperCase())
@@ -30,7 +29,7 @@ export default function Header() {
     } catch (error) {
       console.log(error)
     }
-  }, [])
+  }, [userInfo.email])
 
   return (
     <div className="bg-white shadow-md py-3 w-full fixed h-16 z-30">

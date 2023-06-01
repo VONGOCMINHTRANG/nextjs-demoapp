@@ -35,17 +35,10 @@ export default function SignIn() {
     if (!isValid) return
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password)
-      const data = {
-        email: values.email,
-      }
       const dataRedux = {
         email: values.email,
         password: values.password,
       }
-      if (localStorage.getItem('user') === null) {
-        localStorage.setItem('user', JSON.stringify(data))
-      }
-
       dispatch(setUserInfo(dataRedux))
       router.push(`/account-info/${values.email}`)
       Swal.fire('Welcome back!', '', 'success')

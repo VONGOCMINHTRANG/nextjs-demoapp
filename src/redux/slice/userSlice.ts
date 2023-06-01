@@ -16,7 +16,7 @@ const initialState: UserState = {
   },
 }
 
-export const userSlice = createSlice({
+export const userSlice: any = createSlice({
   name: 'user',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,

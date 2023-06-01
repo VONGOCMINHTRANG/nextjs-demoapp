@@ -96,7 +96,7 @@ export default function SetUpQR() {
                         type="text"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập tên tài khoản"
-                        value={values.fullname ? values.fullname : ''}
+                        // value={values.fullname ? values.fullname : ''}
                         {...register('fullname', { required: true })}
                       />
                       {errors?.fullname?.type === 'required' && (
@@ -114,7 +114,7 @@ export default function SetUpQR() {
                         type="email"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập email"
-                        value={values.email ? values.email : ''}
+                        // value={values.email ? values.email : ''}
                         {...register('email', { required: true })}
                       />
                       {errors?.email?.type === 'required' && (
@@ -130,7 +130,7 @@ export default function SetUpQR() {
                         type="number"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập số điện thoại"
-                        value={values.phone ? values.phone : ''}
+                        // value={values.phone ? values.phone : ''}
                         {...register('phone', { required: true, minLength: 10, maxLength: 10 })}
                       />
                       {errors?.phone?.type === 'required' && (

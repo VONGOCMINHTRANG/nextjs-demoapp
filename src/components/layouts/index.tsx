@@ -1,14 +1,12 @@
 import Header from '../header'
 import Sidebar from '../sidebar'
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useAuth } from '../../context/auth-context'
 
 export default function Layout({ children }: any) {
-  const router = useRouter()
+  const { userInfo } = useAuth()
   useEffect(() => {
-    if (localStorage.getItem('user') === null) {
-      router.push('/signin')
-    }
+    if (!userInfo) return
   }, [])
 
   return (

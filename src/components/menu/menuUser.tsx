@@ -6,8 +6,8 @@ import { auth } from '../../../config/firebase'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
 import { setToggle } from '../../redux/slice/toggleSlice'
+import { RootState } from '../../redux/store'
 
 export default function MenuUser() {
   const router = useRouter()
@@ -26,7 +26,8 @@ export default function MenuUser() {
     }).then((result) => {
       if (result.isConfirmed) {
         signOut(auth)
-        localStorage.removeItem('user')
+        localStorage.removeItem('userInfo')
+        localStorage.removeItem('userToken')
         Swal.fire('Logout successfully.', '', 'success')
         router.push('/signin')
       }
