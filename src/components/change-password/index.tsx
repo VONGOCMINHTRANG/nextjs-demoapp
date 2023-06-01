@@ -18,7 +18,6 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
     register,
     formState: { errors, isValid },
     handleSubmit,
-    reset,
   } = useForm({
     mode: 'onChange',
     defaultValues: { oldPassword: '', newPassword: '', retypePassword: '' },
@@ -127,6 +126,7 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
                   </div>
                 )}
               </div>
+
               <div className="mb-4">
                 <label htmlFor="newPassword" className="text-sm text-black">
                   Mật khẩu mới
@@ -146,6 +146,7 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
                   </div>
                 )}
               </div>
+
               <div className="mb-4">
                 <label htmlFor="retypePassword" className="text-sm text-black">
                   Nhập lại mật khẩu mới

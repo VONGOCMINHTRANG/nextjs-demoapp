@@ -30,7 +30,7 @@ export default function Header() {
     } catch (error) {
       console.log(error)
     }
-  }, [emailUser])
+  }, [])
 
   return (
     <div className="bg-white shadow-md py-3 w-full fixed h-16 z-30">
