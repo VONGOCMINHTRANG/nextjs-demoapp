@@ -4,6 +4,7 @@ import qrCode from 'qrcode'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import MenuAccount from '../../components/menu/menuAccount'
+import QrReader from 'react-qr-reader'
 
 export default function SetUpQR() {
   const {
@@ -22,7 +23,14 @@ export default function SetUpQR() {
   })
 
   const [imageQR, setImageQR] = useState<string>('')
+  const [webcamResult, setWebcamResult] = useState()
+  const [values, setValues] = useState({
+    fullname: '',
+    email: '',
+    phone: '',
+  })
   const [, setOpen] = useState<boolean>(true)
+  const [openWebcam, setOpenWebcam] = useState<boolean>(false)
 
   const generateQrCode = async (values: any) => {
     console.log(values)
@@ -32,7 +40,6 @@ export default function SetUpQR() {
     }
 
     const image: Promise<string> = qrCode.toDataURL(JSON.stringify(values))
-    // qrCode.toDataURL()
     image
       .then((result) => {
         console.log('result >>', result)
@@ -49,9 +56,15 @@ export default function SetUpQR() {
     })
   }
 
-  const [imageUpload, setImageUpload] = useState<boolean>(false)
-  const uploadQrCode = () => {
-    setImageUpload(true)
+  const webcamScan = (result: any) => {
+    if (result) {
+      setWebcamResult(result)
+      setValues({
+        fullname: JSON.parse(result).fullname,
+        email: JSON.parse(result).email,
+        phone: JSON.parse(result).phone,
+      })
+    }
   }
 
   return (
@@ -65,7 +78,7 @@ export default function SetUpQR() {
 
         <hr />
 
-        <div className="flex items-center bg-[#f7faff] h-auto rounded-b-xl">
+        <div className="flex items-center bg-[#f7faff] h-[500px] rounded-b-xl">
           <div className="bg-white my-6 w-4/6 mx-7">
             <div className="px-7 flex justify-between py-3">
               <div className="flex items-center gap-1">
@@ -83,6 +96,7 @@ export default function SetUpQR() {
                         type="text"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập tên tài khoản"
+                        value={values.fullname ? values.fullname : ''}
                         {...register('fullname', { required: true })}
                       />
                       {errors?.fullname?.type === 'required' && (
@@ -100,6 +114,7 @@ export default function SetUpQR() {
                         type="email"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập email"
+                        value={values.email ? values.email : ''}
                         {...register('email', { required: true })}
                       />
                       {errors?.email?.type === 'required' && (
@@ -115,6 +130,7 @@ export default function SetUpQR() {
                         type="number"
                         className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập số điện thoại"
+                        value={values.phone ? values.phone : ''}
                         {...register('phone', { required: true, minLength: 10, maxLength: 10 })}
                       />
                       {errors?.phone?.type === 'required' && (
@@ -173,20 +189,22 @@ export default function SetUpQR() {
 
               <button
                 type="button"
-                className="bg-purple-500 p-2 rounded-md relative hover:bg-purple-400 transition-all"
-                onClick={uploadQrCode}
-              >
-                <input type="file" className="absolute opacity-0" />
-                Upload hình có sẵn
-              </button>
-
-              <button
-                type="button"
                 className="bg-yellow-500 p-2 rounded-md hover:bg-yellow-400 transition-all"
+                onClick={() => setOpenWebcam(true)}
               >
                 Scan QR có sẵn
               </button>
             </div>
+
+            {openWebcam && (
+              <div className="fixed m-auto">
+                <div className="w-80 h-80 mb-4">
+                  <QrReader onScan={webcamScan} legacyMode={false} facingMode={'user'} />
+                </div>
+
+                <button onClick={() => setOpenWebcam(false)}>Close webcam</button>
+              </div>
+            )}
           </div>
         </div>
       </div>

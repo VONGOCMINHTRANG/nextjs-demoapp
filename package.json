@@ -34,6 +34,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/qrcode": "^1.5.0"
+    "@types/qrcode": "^1.5.0",
+    "@types/react-qr-reader": "^2.1.4"
   }
 }
