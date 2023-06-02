@@ -6,12 +6,14 @@ import { getAuth, signOut, updatePassword } from '@firebase/auth'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
-import { setUserInfo } from '../../redux/slice/userSlice'
+import { collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
+import { db } from '../../../config/firebase'
 
 export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
   const [portalDiv, setPortalDiv] = useState<Element | DocumentFragment | null>()
+  const [userId, setuserId] = useState<string>('')
+  const [userPass, setUserPass] = useState<string>('')
+  const auth = getAuth()
 
   const router = useRouter()
   const {
@@ -23,12 +25,9 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
     defaultValues: { oldPassword: '', newPassword: '', retypePassword: '' },
   })
 
-  const user = useSelector((state: RootState) => state.user.userInfo)
-  const dispatch = useDispatch()
-
   const handleUpdatePassword = async (values: any) => {
     if (!isValid) return
-    if (values.oldPassword !== user?.password) {
+    if (values.oldPassword !== userPass) {
       const Toast = Swal.mixin({
         toast: true,
         position: 'top-right',
@@ -66,12 +65,21 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
     }
 
     try {
-      const auth = getAuth()
+      await updateDoc(doc(db, 'users', userId), {
+        password: values.newPassword,
+      })
+        .then(() => {
+          console.log(userPass)
+        })
+        .catch((error) => {
+          console.log('String error >> ', error)
+        })
       await updatePassword(auth.currentUser as any, values.newPassword)
         .then(() => {
-          Swal.fire('Your password has been updated!', '', 'success')
-          dispatch(setUserInfo({}))
+          // dispatch(setUserInfo({}))
+          localStorage.removeItem('userInfo')
           router.push('/signin')
+          Swal.fire('Your password has been updated!', '', 'success')
         })
         .catch((error) => {
           // console.log(error)
@@ -81,6 +89,7 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
           }
         })
     } catch (error) {
+      console.log(error)
       Swal.fire({
         title: 'Oops!',
         text: 'Something went wrong!',
@@ -88,13 +97,25 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
       })
     }
   }
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setPortalDiv(document.querySelector('body'))
     }
-  }, [])
+    const userEmail = JSON.parse(localStorage.getItem('userInfo') || '{}').email
 
-  // console.log(portalDiv)
+    try {
+      const docRef = query(collection(db, 'users'), where('email', '==', userEmail))
+      onSnapshot(docRef, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          setUserPass(doc.data().password)
+          setuserId(doc.id)
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
 
   if (portalDiv) {
     return createPortal(

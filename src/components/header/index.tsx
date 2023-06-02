@@ -12,24 +12,31 @@ import { useAuth } from '../../context/auth-context'
 
 export default function Header() {
   const { userInfo } = useAuth()
-  const [name, setName] = useState<string>('')
+  const [data, setData] = useState([])
   const [openLanguage, setOpenLanguage] = useState<boolean>(false)
   const { showUser, userRef } = useClickUser()
   const { showLanguage, languageRef } = useClickLanguage()
 
   useEffect(() => {
+    if (!userInfo) return
+    const userEmail = JSON.parse(localStorage.getItem('userInfo') || '{}').email
+
     try {
-      if (!userInfo) return
-      const docRef = query(collection(db, 'users'), where('email', '==', userInfo.email))
+      const docRef = query(collection(db, 'users'), where('email', '==', userEmail))
       onSnapshot(docRef, (snapshot) => {
-        snapshot.forEach((doc) => {
-          setName(doc.data().fullname.toUpperCase())
+        let results: any = []
+        snapshot.docs.forEach((doc) => {
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          })
+          setData(results)
         })
       })
     } catch (error) {
       console.log(error)
     }
-  }, [userInfo.email])
+  }, [])
 
   return (
     <div className="bg-white shadow-md py-3 w-full fixed h-16 z-30">
@@ -39,13 +46,18 @@ export default function Header() {
             <BsShop className="w-6 h-6 text-gray-300" />
           </div>
 
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-lg font-semibold text-black">TK CỦA {name}</span>
-              <BsCheckCircleFill className="w-4 h-4 text-green-500" />
-            </div>
-            <span className="text-xs font-semibold text-gray-400">MID : 123456</span>
-          </div>
+          {data.length > 0 &&
+            data?.map((item: any) => (
+              <div key={item?.id} className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-lg font-semibold text-black">
+                    TK CỦA {item?.fullname.toUpperCase()}
+                  </span>
+                  <BsCheckCircleFill className="w-4 h-4 text-green-500" />
+                </div>
+                <span className="text-xs font-semibold text-gray-400">MID : {item?.id}</span>
+              </div>
+            ))}
         </div>
 
         <div className="flex gap-5 items-center">

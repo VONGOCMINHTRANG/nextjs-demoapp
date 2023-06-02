@@ -7,12 +7,17 @@ import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
-import { RootState } from '../../redux/store'
+import { useAuth } from '../../context/auth-context'
+import { useEffect, useState } from 'react'
+import Blur from '../blur'
+import ChangePassword from '../change-password'
 
 export default function MenuUser() {
+  const { userInfo } = useAuth()
   const router = useRouter()
-  const emailUser = router.query.email
   const dispatch = useDispatch()
+  const toggle = useSelector((state: any) => state.toggle.toggleState)
+  console.log('toggle >> ', toggle)
 
   const handleSignOut = () => {
     Swal.fire({
@@ -34,12 +39,16 @@ export default function MenuUser() {
     })
   }
 
+  useEffect(() => {
+    if (!userInfo) router.push('/signin')
+  }, [])
+
   return (
     <>
       <div className="absolute bg-white right-0 mx-8 shadow-md mt-5 rounded-md">
         <ul className="p-2 text-base text-gray-500 font-semibold px-5">
           <li
-            onClick={() => router.push(`/account-info/${emailUser}`)}
+            onClick={() => router.push(`/account-info/${userInfo?.email}`)}
             className="flex items-center gap-4 cursor-pointer hover:bg-green-50 hover:rounded-md p-2.5"
           >
             <BsFillPersonFill />

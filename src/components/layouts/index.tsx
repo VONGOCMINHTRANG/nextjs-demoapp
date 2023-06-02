@@ -2,11 +2,17 @@ import Header from '../header'
 import Sidebar from '../sidebar'
 import { useEffect } from 'react'
 import { useAuth } from '../../context/auth-context'
+import { useRouter } from 'next/router'
 
 export default function Layout({ children }: any) {
   const { userInfo } = useAuth()
+  const router = useRouter()
+
   useEffect(() => {
     if (!userInfo) return
+    if (localStorage.getItem('userInfo') === null) {
+      router.push('/signin')
+    }
   }, [])
 
   return (
@@ -19,4 +25,7 @@ export default function Layout({ children }: any) {
       </div>
     </div>
   )
+}
+function userRouter() {
+  throw new Error('Function not implemented.')
 }

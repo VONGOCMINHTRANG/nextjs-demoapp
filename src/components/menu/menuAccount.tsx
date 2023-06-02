@@ -1,18 +1,14 @@
 import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
 import { useEffect, useState } from 'react'
 
 export default function MenuAccount() {
   const router = useRouter()
-  const user = useSelector((state: RootState) => state.user.userInfo)
   const [email, setEmail] = useState<string>()
 
   useEffect(() => {
-    setEmail(user.email)
+    const userEmail = JSON.parse(localStorage.getItem('userInfo') || '{}').email
+    setEmail(userEmail)
   }, [])
-
-  console.log(email)
 
   return (
     <div className="text-md font-semibold text-black py-4 px-7 flex gap-12 bg-white rounded-t-xl">
