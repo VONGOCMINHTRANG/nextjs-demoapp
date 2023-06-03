@@ -17,6 +17,7 @@ export default function AccountInFormation() {
   const [data, setData] = useState([])
   const toggle = useSelector((state: any) => state.toggle.toggleState)
   const dispatch = useDispatch()
+  const [id, setId] = useState<string>('')
 
   useEffect(() => {
     if (!userInfo) return
@@ -34,6 +35,9 @@ export default function AccountInFormation() {
             ...doc.data(),
           })
           setData(results)
+          data.forEach((item: any) => {
+            setId(item.id)
+          })
         })
       })
     } catch (error) {
@@ -42,34 +46,31 @@ export default function AccountInFormation() {
   }, [])
 
   return (
-    <div className="flex flex-col flex-1 cursor-pointer">
+    <div className="flex flex-col cursor-pointer w-full">
       <div className="mb-6 flex items-center text-green-500 font-medium">
         <IoIosArrowBack className="w-6 h-6" />
         <span>Trở về cài đặt</span>
       </div>
-      <div className="flex flex-1 w-full flex-col">
+      <div className="flex w-full flex-col">
         <MenuAccount></MenuAccount>
         <hr />
 
         <div className="flex items-center bg-[#f7faff] h-auto rounded-b-xl">
-          <div className="bg-white my-6 w-4/6 mx-auto">
-            <div className="px-7 flex justify-between py-3">
-              <div className="flex items-center gap-1">
-                <span className="font-medium text-black">Thông tin tài khoản -</span>
+          <div className="bg-white my-6 w-5/6 md:w-4/6 mx-auto rounded-xl">
+            <div className="px-7 flex justify-between py-3 flex-col md:flex-row gap-y-5 md:gap-y-0">
+              <div className="flex md:items-center gap-1 flex-col md:flex-row">
+                <span className="font-medium text-black flex items-center">
+                  Thông tin tài khoản <span className="hidden md:block">-</span>
+                </span>
 
-                <div className="text-sm text-black/80 flex gap-2">
+                <div className="text-sm text-black/80 flex gap-2 whitespace-nowrap">
                   Mã tài khoản:
-                  {data.length > 0 &&
-                    data?.map((item: any) => (
-                      <span key={item?.id} className="text-black/70">
-                        {item?.id}
-                      </span>
-                    ))}
+                  <span>{id.slice(0, 10)}</span>
                 </div>
               </div>
 
               <div
-                className="text-sm text-green-500 cursor-pointer"
+                className="text-sm text-green-600 font-medium cursor-pointer whitespace-nowrap flex justify-end"
                 onClick={() => dispatch(setToggle(true))}
               >
                 Đổi mật khẩu
@@ -81,31 +82,31 @@ export default function AccountInFormation() {
               )}
             </div>
             <hr />
-            <div className="px-32 py-5">
+            <div className="px-12 md:px-24 py-5">
               <ul>
-                <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                <li className="flex flex-col md:flex-row justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Tên tài khoản</span>
                   <div className="flex gap-3">
-                    <span className="text-black">{userInfo?.fullname}</span>
+                    <span className="text-black/70 font-medium">{userInfo?.fullname}</span>
                     <FaRegEdit className="w-5 h-5 text-green-500" />
                   </div>
                 </li>
-                <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                <li className="flex flex-col md:flex-row justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Email</span>
                   <div className="flex gap-3">
-                    <span className="text-gray-400">{userInfo?.email}</span>
+                    <span className="text-gray-500 font-medium">{userInfo?.email}</span>
                   </div>
                 </li>
-                <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                <li className="flex flex-col md:flex-row justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Số điện thoại (Tài khoản mặc định)</span>
                   <div className="flex gap-3">
-                    <span>0123456789</span>
+                    <span className="text-black/70 font-medium">0123456789</span>
                   </div>
                 </li>
-                <li className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                <li className="flex flex-col md:flex-row justify-between text-sm border-dotted border-b-2 py-3">
                   <span className="text-gray-400">Quyền</span>
                   <div className="flex gap-3">
-                    <span>Chủ doanh nghiệp</span>
+                    <span className="text-black/70 font-medium">Chủ doanh nghiệp</span>
                   </div>
                 </li>
               </ul>

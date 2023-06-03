@@ -17,10 +17,15 @@ import {
 } from 'react-icons/md'
 import { GiReceiveMoney } from 'react-icons/gi'
 import { AiOutlineFieldTime, AiTwotoneSetting } from 'react-icons/ai'
+import { ISidebar } from '../../interfaces'
 
-export default function Sidebar() {
+export default function Sidebar({ sidebar }: ISidebar) {
   return (
-    <div className="text-sm font-semibold w-96 flex bg-white text-black/70 p-4 font-sans shadow-2xl relative overflow-y-auto top-16">
+    <div
+      className={`sidebar fixed xl:relative bottom-0 text-sm font-semibold w-72 xl:w-96 flex bg-white text-black/70 p-4 font-sans shadow-2xl overflow-y-auto lg:overflow-x-hidden lg:overflow-y-auto top-16 h-full transition-all z-10 ${
+        sidebar ? 'visible translate-x-0' : 'invisible -translate-x-full'
+      }`}
+    >
       <div className="p-1 flex flex-col flex-1">
         <ul>
           <li className="flex items-center gap-4 hover:text-green-500 cursor-pointer hover:bg-gray-100 hover:rounded-md p-2 mb-0.5">

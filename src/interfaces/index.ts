@@ -12,4 +12,8 @@ interface IAccountInformation {
   id: string
 }
 
-export type { IChangePW, IBlur, IAccountInformation }
+interface ISidebar {
+  sidebar: boolean
+}
+
+export type { IChangePW, IBlur, IAccountInformation, ISidebar }

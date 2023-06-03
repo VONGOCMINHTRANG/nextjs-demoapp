@@ -5,41 +5,42 @@ import { signInWithEmailAndPassword } from '@firebase/auth'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
 import LoadingSkeleton from '../../components/loading-skeleton'
+import Logo from '../../../assets/images/logo.svg'
+import Image from 'next/image'
 
 export default function SignIn() {
   const [loading, setLoading] = useState<boolean>(false)
-  const [values, setValues] = useState({
-    fullname: '',
-    email: '',
-    password: '',
-  })
+  // const [values, setValues] = useState({
+  //   fullname: '',
+  //   email: '',
+  //   password: '',
+  // })
+
   const router = useRouter()
   const {
+    register,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useForm({
-    mode: 'onBlur',
+    mode: 'onChange',
+    defaultValues: {
+      fullname: '',
+      email: '',
+      password: '',
+    },
   })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const handleSignIn = async () => {
+  const handleSignIn = async (values: any) => {
     if (!isValid) return
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password)
       setLoading(true)
+      await signInWithEmailAndPassword(auth, values.email, values.password)
       router.push(`/account-info/${values.email}`)
       Swal.fire('Welcome back!', '', 'success')
       setLoading(false)
     } catch (error: any) {
       setLoading(false)
-      console.log('error >> ', error)
+      // console.log('error >> ', error)
       if (error.code === 'auth/invalid-email') {
         const Toast = Swal.mixin({
           toast: true,
@@ -55,23 +56,6 @@ export default function SignIn() {
         await Toast.fire({
           icon: 'error',
           title: 'Please enter an valid email!',
-        })
-      }
-      if (error.code === 'auth/missing-password') {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-right',
-          iconColor: 'red',
-          customClass: {
-            popup: 'colored-toast',
-          },
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-        })
-        await Toast.fire({
-          icon: 'error',
-          title: 'Please enter your password!',
         })
       }
       if (error.code === 'auth/wrong-password') {
@@ -98,49 +82,50 @@ export default function SignIn() {
           icon: 'error',
         })
       }
-      if (error.code === ' auth/wrong-password') {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-right',
-          iconColor: 'red',
-          customClass: {
-            popup: 'colored-toast',
-          },
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-        })
-        await Toast.fire({
-          icon: 'error',
-          title: 'Your password is not correct!',
-        })
-      }
     }
   }
 
   return (
     <>
       {!loading && (
-        <div className="bg-grey-lighter min-h-screen flex flex-col">
+        <div className="bg-grey-lighter min-h-screen flex flex-col bg-gray-100">
           <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-            <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-              <h1 className="mb-8 text-3xl text-center">Sign in</h1>
-              <form onSubmit={handleSubmit(handleSignIn)}>
-                <input
-                  type="text"
-                  className="block border border-grey-light w-full p-3 rounded mb-4"
-                  name="email"
-                  placeholder="Email"
-                  onChange={handleInputChange}
-                />
+            <div className="bg-white px-6 py-4 rounded shadow-md text-black w-full">
+              <div className="py-4">
+                <Image src={Logo} alt="logo" className="w-32" />
+              </div>
 
-                <input
-                  type="password"
-                  className="block border border-grey-light w-full p-3 rounded mb-4"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleInputChange}
-                />
+              <h1 className="mb-8 text-2xl text-center font-medium">Sign in</h1>
+              <form onSubmit={handleSubmit(handleSignIn)}>
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    className="block border border-grey-light w-full p-3 rounded mb-1 outline-none focus:ring-1"
+                    placeholder="Email"
+                    {...register('email', { required: true })}
+                  />
+                  {errors?.email?.type === 'required' && (
+                    <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <input
+                    type="password"
+                    className="block border border-grey-light w-full p-3 rounded mb-1 outline-none focus:ring-1"
+                    placeholder="Password"
+                    {...register('password', { required: true, minLength: 6 })}
+                  />
+                  {errors?.password?.type === 'required' && (
+                    <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                  )}
+                  {errors?.password?.type === 'minLength' && (
+                    <div className="text-red-500 text-xs italic">
+                      Mật khẩu phải gồm ít nhất 6 ký tự
+                    </div>
+                  )}
+                </div>
+
                 <button
                   type="submit"
                   className="w-full text-center py-3 rounded bg-green-600 text-white focus:outline-none my-1"
@@ -150,12 +135,9 @@ export default function SignIn() {
               </form>
             </div>
 
-            <div className="text-grey-dark mt-6">
-              Create an Account?
-              <a className="no-underline border-b border-blue text-blue" href="/signup">
-                Sign up
-              </a>
-            </div>
+            <a href="/signup" className="text-black mt-6 text-sm italic">
+              Create an Account? <span className="text-green-600">Sign up</span>
+            </a>
           </div>
         </div>
       )}

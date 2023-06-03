@@ -10,7 +10,7 @@ const initialState: ToggleState = {
   toggleState: false,
 }
 
-export const userSlice: any = createSlice({
+export const toggleSlice: any = createSlice({
   name: 'toggle',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
@@ -21,5 +21,5 @@ export const userSlice: any = createSlice({
   },
 })
 
-export const { setToggle } = userSlice.actions
-export default userSlice.reducer
+export const { setToggle } = toggleSlice.actions
+export default toggleSlice.reducer

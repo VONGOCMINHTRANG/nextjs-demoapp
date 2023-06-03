@@ -8,16 +8,14 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import { useAuth } from '../../context/auth-context'
-import { useEffect, useState } from 'react'
-import Blur from '../blur'
-import ChangePassword from '../change-password'
+import { useEffect } from 'react'
 
 export default function MenuUser() {
   const { userInfo } = useAuth()
   const router = useRouter()
   const dispatch = useDispatch()
   const toggle = useSelector((state: any) => state.toggle.toggleState)
-  console.log('toggle >> ', toggle)
+  // console.log('toggle >> ', toggle)
 
   const handleSignOut = () => {
     Swal.fire({

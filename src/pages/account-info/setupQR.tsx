@@ -9,8 +9,6 @@ import Blur from '../../components/blur'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
-import BarcodeScannerComponent from 'react-qr-barcode-scanner'
-import ScanQR from '../../components/scanQR'
 
 export default function SetUpQR() {
   const [imageQR, setImageQR] = useState<string>('')
@@ -75,8 +73,8 @@ export default function SetUpQR() {
   }
 
   useEffect(() => {
-    console.log('result >> ', webcamResult)
-  }, [webcamResult])
+    setOpenWebcam(false)
+  }, [])
 
   return (
     <>
@@ -90,18 +88,18 @@ export default function SetUpQR() {
 
           <hr />
 
-          <div className="flex py-6 bg-[#f7faff] h-[500px] rounded-b-xl">
-            <div className="bg-white w-4/6 mx-7 h-auto">
+          <div className="flex flex-col lg:flex-row py-6 w-full items-center bg-[#f7faff] h-auto rounded-b-xl">
+            <div className="bg-white w-5/6 mx-7 h-auto mb-5">
               <div className="px-7 flex justify-between py-3">
                 <div className="flex items-center gap-1">
                   <span className="font-medium text-black">Thông tin thiết lập mã QR</span>
                 </div>
               </div>
               <hr />
-              <div className="px-32 py-5">
+              <div className="px-12 md:px-24 py-5">
                 <form onSubmit={handleSubmit(generateQrCode)}>
                   <div className="mb-8">
-                    <div className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                    <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
                       <span className="text-black">Tên tài khoản</span>
                       <div>
                         <input
@@ -119,7 +117,7 @@ export default function SetUpQR() {
                       </div>
                     </div>
 
-                    <div className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                    <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
                       <span className="text-black">Email</span>
                       <div>
                         <input
@@ -135,7 +133,7 @@ export default function SetUpQR() {
                       </div>
                     </div>
 
-                    <div className="flex justify-between text-sm border-dotted border-b-2 py-3">
+                    <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
                       <span className="text-black">Số điện thoại (Tài khoản mặc định)</span>
                       <div>
                         <input
@@ -170,7 +168,7 @@ export default function SetUpQR() {
                 <div>{webcamResult}</div>
               </div>
             </div>
-            <div className="position-relative text-black flex items-center flex-1 flex-col">
+            <div className="relative text-black flex items-center flex-col">
               <div className="flex justify-center font-medium mb-2">MÃ QR CỦA BẠN</div>
               {imageQR ? (
                 <img src={imageQR} alt="Image QR" className="w-60 h-60 mb-2" />
@@ -181,7 +179,7 @@ export default function SetUpQR() {
                   </fieldset>
                 </form>
               )}
-              <div className="flex gap-3 text-white text-sm font-medium">
+              <div className="flex xl:flex-col gap-3 text-white text-sm font-medium">
                 {imageQR ? (
                   <a href={imageQR} download>
                     <button
@@ -217,9 +215,9 @@ export default function SetUpQR() {
               </div>
 
               <div className={`fixed m-auto ${openWebcam == false && 'hidden'}`}>
-                <div className="w-96 h-96 mb-4">
+                {/* <div className="w-96 h-96 mb-4">
                   <QrReader onScan={webcamScan} legacyMode={false} facingMode={'user'} />
-                </div>
+                </div> */}
                 <button onClick={() => setOpenWebcam(false)}>Close webcam</button>
               </div>
 

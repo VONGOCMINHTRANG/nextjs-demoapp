@@ -1,9 +1,11 @@
-import Layout from '../components/layouts'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function Home() {
-  return <></>
-}
+  const router = useRouter()
 
-Home.getLayout = function getLayout() {
-  return <Layout></Layout>
+  useEffect(() => {
+    router.push('/signin')
+  }, [])
+  return <></>
 }

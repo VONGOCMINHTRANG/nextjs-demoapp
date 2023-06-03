@@ -3,10 +3,12 @@ import Sidebar from '../sidebar'
 import { useEffect } from 'react'
 import { useAuth } from '../../context/auth-context'
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
 
 export default function Layout({ children }: any) {
   const { userInfo } = useAuth()
   const router = useRouter()
+  const sidebar = useSelector((state: any) => state.sidebar.sidebarState)
 
   useEffect(() => {
     if (!userInfo) return
@@ -16,16 +18,13 @@ export default function Layout({ children }: any) {
   }, [])
 
   return (
-    <div className="flex flex-col bg-gray-100 h-screen relative">
+    <div className="flex flex-col bg-white relative">
       <Header />
 
-      <div className="flex w-full h-[calc(100%-64px)]">
-        <Sidebar />
-        <main className="w-full flex mt-16 p-6">{children}</main>
+      <div className="flex w-full h-[calc(100%-64px)] top-16">
+        <Sidebar sidebar={sidebar} />
+        <div className="w-full flex mt-16 p-6">{children}</div>
       </div>
     </div>
   )
-}
-function userRouter() {
-  throw new Error('Function not implemented.')
 }
