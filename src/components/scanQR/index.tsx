@@ -1,13 +1,8 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import QrReader from 'react-qr-reader'
-
-interface IScanQR {
-  onClick: any
-  openWebcam: boolean
-}
+import { IScanQR } from '../../interfaces'
 
 export default function ScanQR({ onClick, openWebcam }: IScanQR) {
-  const qrReader = useRef(null)
   const [webcamResult, setWebcamResult] = useState<any>()
   const webcamScan = (result: any) => {
     if (result) {

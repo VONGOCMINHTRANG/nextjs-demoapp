@@ -2,14 +2,14 @@ import { IoIosArrowBack } from 'react-icons/io'
 import Layout from '../../components/layouts'
 import qrCode from 'qrcode'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import MenuAccount from '../../components/menu/menuAccount'
 import QrReader from 'react-qr-reader'
 import Blur from '../../components/blur'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
-
+import BarcodeScannerComponent from 'react-webcam-barcode-scanner'
 export default function SetUpQR() {
   const [imageQR, setImageQR] = useState<string>('')
   const [webcamResult, setWebcamResult] = useState<any>()
@@ -36,9 +36,10 @@ export default function SetUpQR() {
     },
   })
   const dispatch = useDispatch()
+  const ref = useRef(null)
 
   const generateQrCode = async (values: any) => {
-    console.log(values)
+    // console.log(values)
     if (!isValid) return
     if (getValues('fullname') != '' && getValues('email') != '' && getValues('phone') != '') {
       setOpen(true)
@@ -63,6 +64,7 @@ export default function SetUpQR() {
 
   const webcamScan = (result: any) => {
     if (result) {
+      console.log('result >> ', result)
       setWebcamResult(result)
       setValues({
         fullname: JSON.parse(result).fullname,
@@ -72,13 +74,26 @@ export default function SetUpQR() {
     }
   }
 
-  useEffect(() => {
+  const handleError = (error: any) => {
+    if (error) {
+      console.log(error)
+    }
+  }
+
+  const closeCam = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: true,
+    })
+
+    const topOfElement = document.querySelector('#setupQR') - 200
+    window.scroll({ top: topOfElement, behavior: 'smooth' })
     setOpenWebcam(false)
-  }, [])
+  }
 
   return (
     <>
-      <div className="flex flex-col flex-1 cursor-pointer">
+      <div className="flex flex-col flex-1 cursor-pointer" id="setupQR">
         <div className="mb-6 flex items-center text-green-500 font-medium">
           <IoIosArrowBack className="w-6 h-6" />
           <span>Trở về cài đặt</span>
@@ -89,7 +104,7 @@ export default function SetUpQR() {
           <hr />
 
           <div className="flex flex-col lg:flex-row py-6 w-full items-center bg-[#f7faff] h-auto rounded-b-xl">
-            <div className="bg-white w-5/6 mx-7 h-auto mb-5">
+            <div className="bg-white w-5/6 xl:w-4/6 mx-7 h-auto mb-5">
               <div className="px-7 flex justify-between py-3">
                 <div className="flex items-center gap-1">
                   <span className="font-medium text-black">Thông tin thiết lập mã QR</span>
@@ -104,6 +119,7 @@ export default function SetUpQR() {
                       <div>
                         <input
                           type="text"
+                          value={values.fullname}
                           className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập tên tài khoản"
                           // value={values.fullname ? values.fullname : ''}
@@ -122,6 +138,7 @@ export default function SetUpQR() {
                       <div>
                         <input
                           type="email"
+                          value={values.email}
                           className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập email"
                           // value={values.email ? values.email : ''}
@@ -138,6 +155,7 @@ export default function SetUpQR() {
                       <div>
                         <input
                           type="number"
+                          value={values.phone}
                           className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập số điện thoại"
                           // value={values.phone ? values.phone : ''}
@@ -165,7 +183,7 @@ export default function SetUpQR() {
                   </button>
                 </form>
 
-                <div>{webcamResult}</div>
+                <div className="text-black">{webcamResult}</div>
               </div>
             </div>
             <div className="relative text-black flex items-center flex-col">
@@ -179,7 +197,7 @@ export default function SetUpQR() {
                   </fieldset>
                 </form>
               )}
-              <div className="flex xl:flex-col gap-3 text-white text-sm font-medium">
+              <div className="flex lg:flex-col lg:items-center gap-3 text-white text-sm font-medium">
                 {imageQR ? (
                   <a href={imageQR} download>
                     <button
@@ -198,12 +216,12 @@ export default function SetUpQR() {
                   </button>
                 )}
 
-                <button
+                {/* <button
                   type="button"
                   className="bg-purple-500 p-2 rounded-md hover:bg-purple-400 transition-all"
                 >
                   Upload QR có sẵn
-                </button>
+                </button> */}
 
                 <button
                   type="button"
@@ -214,15 +232,29 @@ export default function SetUpQR() {
                 </button>
               </div>
 
-              <div className={`fixed m-auto ${openWebcam == false && 'hidden'}`}>
-                {/* <div className="w-96 h-96 mb-4">
-                  <QrReader onScan={webcamScan} legacyMode={false} facingMode={'user'} />
-                </div> */}
-                <button onClick={() => setOpenWebcam(false)}>Close webcam</button>
-              </div>
-
               {/* <ScanQR onClick={() => setOpenWebcam}></ScanQR> */}
             </div>
+          </div>
+          <div
+            className={`flex justify-center flex-col items-center mt-8 ${
+              openWebcam == false && 'hidden'
+            }`}
+          >
+            <div className="w-80 h-80 mb-4">
+              <QrReader
+                onScan={webcamScan}
+                legacyMode={false}
+                facingMode={'user'}
+                onError={handleError}
+              />
+            </div>
+
+            <button
+              onClick={closeCam}
+              className="bg-red-500 p-2 rounded-md hover:bg-red-400 w-fit mx-auto transition-all text-white font-medium"
+            >
+              Close webcam
+            </button>
           </div>
         </div>
       </div>

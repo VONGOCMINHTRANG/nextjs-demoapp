@@ -16,4 +16,9 @@ interface ISidebar {
   sidebar: boolean
 }
 
-export type { IChangePW, IBlur, IAccountInformation, ISidebar }
+interface IScanQR {
+  onClick: any
+  openWebcam: boolean
+}
+
+export type { IChangePW, IBlur, IAccountInformation, ISidebar, IScanQR }
