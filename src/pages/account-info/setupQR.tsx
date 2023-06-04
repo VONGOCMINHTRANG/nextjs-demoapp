@@ -2,7 +2,7 @@ import { IoIosArrowBack } from 'react-icons/io'
 import Layout from '../../components/layouts'
 import qrCode from 'qrcode'
 import { useForm } from 'react-hook-form'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import MenuAccount from '../../components/menu/menuAccount'
 import QrReader from 'react-qr-reader'
 import Blur from '../../components/blur'
@@ -10,18 +10,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
 export default function SetUpQR() {
+  const dispatch = useDispatch()
+  const nodeRef = useRef(null)
+  const height: any = nodeRef.current
   const [imageQR, setImageQR] = useState<string>('')
   const [webcamResult, setWebcamResult] = useState<any>()
   const [, setOpen] = useState<boolean>(true)
   const [openWebcam, setOpenWebcam] = useState<boolean>(false)
   const toggle = useSelector((state: any) => state.toggle.toggleState)
-  const [values, setValues] = useState({
-    fullname: '',
-    email: '',
-    phone: '',
-  })
   const {
     getValues,
+    setValue,
     handleSubmit,
     formState: { isValid, errors },
     register,
@@ -34,11 +33,8 @@ export default function SetUpQR() {
       phone: '',
     },
   })
-  const dispatch = useDispatch()
-  const nodeRef = useRef(null)
 
   const generateQrCode = async (values: any) => {
-    // console.log(values)
     if (!isValid) return
     if (getValues('fullname') != '' && getValues('email') != '' && getValues('phone') != '') {
       setOpen(true)
@@ -65,11 +61,19 @@ export default function SetUpQR() {
     if (result) {
       console.log('result >> ', result)
       setWebcamResult(result)
-      setValues({
-        fullname: JSON.parse(result).fullname,
-        email: JSON.parse(result).email,
-        phone: JSON.parse(result).phone,
+      setValue('fullname', JSON.parse(result).fullname)
+      setValue('email', JSON.parse(result).email)
+      setValue('phone', JSON.parse(result).phone)
+
+      reset({
+        fullname: getValues('fullname'),
+        email: getValues('email'),
+        phone: getValues('phone'),
       })
+
+      const topOfElement = height.offsetHeight - 1000
+      window.scroll({ top: topOfElement, behavior: 'smooth' })
+      setOpenWebcam(false)
     }
   }
 
@@ -85,10 +89,8 @@ export default function SetUpQR() {
       video: true,
     })
 
-    const height: any = nodeRef.current
-    const topOfElement = height.offsetHeight - 200
+    const topOfElement = height.offsetHeight - 1000
     window.scroll({ top: topOfElement, behavior: 'smooth' })
-
     setOpenWebcam(false)
   }
 
@@ -119,15 +121,12 @@ export default function SetUpQR() {
                       <span className="text-black">Tên tài khoản</span>
                       <input
                         type="text"
-                        value={values.fullname}
                         className="border-2 w-full md:w-72  p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                         placeholder="Nhập tên tài khoản"
                         {...register('fullname', { required: true })}
                       />
                       {errors?.fullname?.type === 'required' && (
-                        <div className="text-red-500 text-xs italic">
-                          Vui lòng nhập tên tài khoản
-                        </div>
+                        <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
                       )}
                     </div>
 
@@ -136,13 +135,12 @@ export default function SetUpQR() {
                       <div>
                         <input
                           type="email"
-                          value={values.email}
                           className="border-2 w-full md:w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập email"
                           {...register('email', { required: true })}
                         />
                         {errors?.email?.type === 'required' && (
-                          <div className="text-red-500 text-xs italic">Vui lòng nhập email</div>
+                          <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
                         )}
                       </div>
                     </div>
@@ -152,15 +150,12 @@ export default function SetUpQR() {
                       <div>
                         <input
                           type="number"
-                          value={values.phone}
                           className="border-2 w-full md:w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập số điện thoại"
                           {...register('phone', { required: true, minLength: 10, maxLength: 10 })}
                         />
                         {errors?.phone?.type === 'required' && (
-                          <div className="text-red-500 text-xs italic">
-                            Vui lòng nhập số điện thoại
-                          </div>
+                          <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
                         )}
                         {errors?.phone?.type === 'minLength' && (
                           <div className="text-red-500 text-xs italic">
@@ -178,8 +173,6 @@ export default function SetUpQR() {
                     Tạo mã
                   </button>
                 </form>
-
-                <div className="text-black">{webcamResult}</div>
               </div>
             </div>
             <div className="relative text-black flex items-center flex-col">
@@ -225,7 +218,7 @@ export default function SetUpQR() {
             </div>
           </div>
 
-          {/* <div
+          <div
             className={`flex justify-center flex-col items-center mt-8 ${
               openWebcam == false && 'hidden'
             }`}
@@ -245,7 +238,7 @@ export default function SetUpQR() {
             >
               Close webcam
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
 
