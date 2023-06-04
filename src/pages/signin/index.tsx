@@ -8,15 +8,11 @@ import LoadingSkeleton from '../../components/loading-skeleton'
 import Logo from '../../../assets/images/logo.svg'
 import Image from 'next/image'
 import Link from 'next/link'
+import useCheckLoggedIn from '../../hooks/useCheckLoggedIn'
 
 export default function SignIn() {
   const [loading, setLoading] = useState<boolean>(false)
-  // const [values, setValues] = useState({
-  //   fullname: '',
-  //   email: '',
-  //   password: '',
-  // })
-
+  const { checkLogged } = useCheckLoggedIn()
   const router = useRouter()
   const {
     register,
@@ -88,7 +84,7 @@ export default function SignIn() {
 
   return (
     <>
-      {!loading && (
+      {!loading && !checkLogged && (
         <div className="bg-grey-lighter min-h-screen flex flex-col bg-gray-100">
           <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
             <div className="bg-white px-6 py-4 rounded shadow-md text-black w-full">

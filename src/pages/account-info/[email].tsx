@@ -35,9 +35,6 @@ export default function AccountInFormation() {
             ...doc.data(),
           })
           setData(results)
-          data.forEach((item: any) => {
-            setId(item.id)
-          })
         })
       })
     } catch (error) {
@@ -65,7 +62,8 @@ export default function AccountInFormation() {
 
                 <div className="text-sm text-black/80 flex gap-2 whitespace-nowrap">
                   Mã tài khoản:
-                  <span>{id.slice(0, 10)}</span>
+                  {data.length > 0 &&
+                    data?.map((item: any) => <span key={item.id}>{item.id.slice(0, 10)}</span>)}
                 </div>
               </div>
 

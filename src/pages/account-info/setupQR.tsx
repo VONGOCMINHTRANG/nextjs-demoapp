@@ -112,26 +112,23 @@ export default function SetUpQR() {
                 </div>
               </div>
               <hr />
-              <div className="px-12 md:px-24 py-5">
-                <form onSubmit={handleSubmit(generateQrCode)}>
-                  <div className="mb-8">
+              <div className="px-4 md:px-24 py-5">
+                <form onSubmit={handleSubmit(generateQrCode)} className="flex flex-col w-full">
+                  <div className="mb-8 flex flex-col">
                     <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
                       <span className="text-black">Tên tài khoản</span>
-                      <div>
-                        <input
-                          type="text"
-                          value={values.fullname}
-                          className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
-                          placeholder="Nhập tên tài khoản"
-                          // value={values.fullname ? values.fullname : ''}
-                          {...register('fullname', { required: true })}
-                        />
-                        {errors?.fullname?.type === 'required' && (
-                          <div className="text-red-500 text-xs italic">
-                            Vui lòng nhập tên tài khoản
-                          </div>
-                        )}
-                      </div>
+                      <input
+                        type="text"
+                        value={values.fullname}
+                        className="border-2 w-full md:w-72  p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
+                        placeholder="Nhập tên tài khoản"
+                        {...register('fullname', { required: true })}
+                      />
+                      {errors?.fullname?.type === 'required' && (
+                        <div className="text-red-500 text-xs italic">
+                          Vui lòng nhập tên tài khoản
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
@@ -140,9 +137,8 @@ export default function SetUpQR() {
                         <input
                           type="email"
                           value={values.email}
-                          className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
+                          className="border-2 w-full md:w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập email"
-                          // value={values.email ? values.email : ''}
                           {...register('email', { required: true })}
                         />
                         {errors?.email?.type === 'required' && (
@@ -157,9 +153,8 @@ export default function SetUpQR() {
                         <input
                           type="number"
                           value={values.phone}
-                          className="border-2 w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
+                          className="border-2 w-full md:w-72 p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
                           placeholder="Nhập số điện thoại"
-                          // value={values.phone ? values.phone : ''}
                           {...register('phone', { required: true, minLength: 10, maxLength: 10 })}
                         />
                         {errors?.phone?.type === 'required' && (
@@ -217,13 +212,6 @@ export default function SetUpQR() {
                   </button>
                 )}
 
-                {/* <button
-                  type="button"
-                  className="bg-purple-500 p-2 rounded-md hover:bg-purple-400 transition-all"
-                >
-                  Upload QR có sẵn
-                </button> */}
-
                 <button
                   type="button"
                   className="bg-yellow-500 p-2 rounded-md hover:bg-yellow-400 transition-all"
@@ -236,7 +224,8 @@ export default function SetUpQR() {
               {/* <ScanQR onClick={() => setOpenWebcam}></ScanQR> */}
             </div>
           </div>
-          <div
+
+          {/* <div
             className={`flex justify-center flex-col items-center mt-8 ${
               openWebcam == false && 'hidden'
             }`}
@@ -256,7 +245,7 @@ export default function SetUpQR() {
             >
               Close webcam
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

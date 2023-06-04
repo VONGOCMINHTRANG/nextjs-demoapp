@@ -62,13 +62,13 @@ export default function Header() {
             data?.map((item: any) => (
               <div key={item?.id} className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-base md:text-lg font-semibold text-black">
+                  <span className="text-sm md:text-base font-semibold text-black whitespace-nowrap">
                     TK CỦA {item?.fullname.toUpperCase()}
                   </span>
                   <BsCheckCircleFill className="w-4 h-4 text-green-500" />
                 </div>
                 <span className="text-xs whitespace-nowrap font-semibold text-gray-400">
-                  MID : {item?.id}
+                  MID : {item?.id.slice(0, 10)}
                 </span>
               </div>
             ))}

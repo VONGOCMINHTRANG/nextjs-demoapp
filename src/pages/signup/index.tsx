@@ -9,13 +9,13 @@ import Image from 'next/image'
 import Logo from '../../../assets/images/logo.svg'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
+import useCheckLoggedIn from '../../hooks/useCheckLoggedIn'
 
 export default function SignUp() {
-  // const [values, setValues] = useState({
-  //   fullname: '',
-  //   email: '',
-  //   password: '',
-  // })
+  const [loading, setLoading] = useState<boolean>(false)
+  const [, setUserInfo] = useState('')
+  const router = useRouter()
+  const { checkLogged } = useCheckLoggedIn()
   const {
     register,
     handleSubmit,
@@ -28,11 +28,6 @@ export default function SignUp() {
       password: '',
     },
   })
-
-  const [loading, setLoading] = useState<boolean>(false)
-
-  const [, setUserInfo] = useState('')
-  const router = useRouter()
 
   const handleCreateUser = async (values: any) => {
     if (!isValid) return
@@ -161,7 +156,7 @@ export default function SignUp() {
 
   return (
     <>
-      {!loading && (
+      {!loading && !checkLogged && (
         <div className="bg-grey-lighter min-h-screen flex flex-col bg-gray-100">
           <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
             <div className="bg-white px-6 py-4 rounded shadow-md text-black w-full">
