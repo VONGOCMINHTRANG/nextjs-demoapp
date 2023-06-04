@@ -35,7 +35,7 @@ export default function SetUpQR() {
     },
   })
   const dispatch = useDispatch()
-  const ref = useRef(null)
+  const nodeRef = useRef(null)
 
   const generateQrCode = async (values: any) => {
     // console.log(values)
@@ -85,14 +85,16 @@ export default function SetUpQR() {
       video: true,
     })
 
-    const topOfElement = document.querySelector('#setupQR') - 200
+    const height: any = nodeRef.current
+    const topOfElement = height.offsetHeight - 200
     window.scroll({ top: topOfElement, behavior: 'smooth' })
+
     setOpenWebcam(false)
   }
 
   return (
     <>
-      <div className="flex flex-col flex-1 cursor-pointer" id="setupQR">
+      <div className="flex flex-col flex-1 cursor-pointer" id="setupQR" ref={nodeRef}>
         <div className="mb-6 flex items-center text-green-500 font-medium">
           <IoIosArrowBack className="w-6 h-6" />
           <span>Trở về cài đặt</span>

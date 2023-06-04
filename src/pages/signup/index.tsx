@@ -8,6 +8,7 @@ import LoadingSkeleton from '../../components/loading-skeleton'
 import Image from 'next/image'
 import Logo from '../../../assets/images/logo.svg'
 import { useForm } from 'react-hook-form'
+import Link from 'next/link'
 
 export default function SignUp() {
   // const [values, setValues] = useState({
@@ -219,9 +220,9 @@ export default function SignUp() {
               </form>
             </div>
 
-            <a href="/signin" className="text-black mt-6 text-sm italic">
+            <Link href="/signin" className="text-black mt-6 text-sm italic">
               Already have an account? <span className="text-green-600">Sign in</span>
-            </a>
+            </Link>
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import LoadingSkeleton from '../../components/loading-skeleton'
 import Logo from '../../../assets/images/logo.svg'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function SignIn() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -135,9 +136,9 @@ export default function SignIn() {
               </form>
             </div>
 
-            <a href="/signup" className="text-black mt-6 text-sm italic">
+            <Link href="/signup" className="text-black mt-6 text-sm italic">
               Create an Account? <span className="text-green-600">Sign up</span>
-            </a>
+            </Link>
           </div>
         </div>
       )}

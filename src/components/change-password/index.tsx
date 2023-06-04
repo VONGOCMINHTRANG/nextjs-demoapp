@@ -82,7 +82,7 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
         .then(() => {
           // dispatch(setUserInfo({}))
           localStorage.removeItem('userInfo')
-          router.push('/signin')
+          // router.push('/signin')
           Swal.fire('Your password has been updated!', '', 'success')
         })
         .catch((error) => {
