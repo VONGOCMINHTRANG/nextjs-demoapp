@@ -9,7 +9,6 @@ import Blur from '../../components/blur'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
-import BarcodeScannerComponent from 'react-webcam-barcode-scanner'
 export default function SetUpQR() {
   const [imageQR, setImageQR] = useState<string>('')
   const [webcamResult, setWebcamResult] = useState<any>()
