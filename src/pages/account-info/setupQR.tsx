@@ -12,6 +12,7 @@ import ChangePassword from '../../components/change-password'
 import Button from '../../components/button'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import ScanQR from '../../components/scanQR'
 // import BarcodeScannerComponent from 'react-webcam-barcode-scanner'
 const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), { ssr: false })
 
@@ -20,9 +21,10 @@ export default function SetUpQR() {
   const nodeRef = useRef(null)
   const height: any = nodeRef.current
   const [imageQR, setImageQR] = useState<string>('')
-  const [webcamResult, setWebcamResult] = useState<any>()
   const [, setOpen] = useState<boolean>(true)
   const [openWebcam, setOpenWebcam] = useState<boolean>(false)
+  const [webcamResult, setWebcamResult] = useState<string>('Not found')
+  const [stopStream, setStopStream] = useState<boolean>(false)
   const toggle = useSelector((state: any) => state.toggle.toggleState)
   const {
     getValues,
@@ -63,46 +65,17 @@ export default function SetUpQR() {
     })
   }
 
-  const webcamScan = (result: any) => {
-    if (result) {
-      console.log('result >> ', result)
-      setWebcamResult(result)
-      setValue('fullname', JSON.parse(result).fullname)
-      setValue('email', JSON.parse(result).email)
-      setValue('phone', JSON.parse(result).phone)
-
-      reset({
-        fullname: getValues('fullname'),
-        email: getValues('email'),
-        phone: getValues('phone'),
-      })
-
-      const topOfElement = height.offsetHeight - 1000
-      window.scroll({ top: topOfElement, behavior: 'smooth' })
-      setOpenWebcam(false)
-    }
-  }
-
-  const handleError = (error: any) => {
-    if (error) {
-      console.log(error)
-    }
-  }
-
   const closeCam = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: true,
     })
 
-    const topOfElement = height.offsetHeight - 1000
+    const topOfElement = height.offsetHeight - 2000
     window.scroll({ top: topOfElement, behavior: 'smooth' })
     setOpenWebcam(false)
+    setStopStream(false)
   }
-
-  const [data, setData] = useState<string>('Not found')
-  const [stopStream, setStopStream] = useState<boolean>(false)
-  console.log('data >> ', data)
 
   return (
     <>
@@ -223,33 +196,28 @@ export default function SetUpQR() {
                   Scan QR có sẵn
                 </Button>
               </div>
-
-              {/* <ScanQR onClick={() => setOpenWebcam}></ScanQR> */}
             </div>
           </div>
 
-          <div className="flex justify-center flex-col items-center mt-8 ">
-            {/* <div className="w-64 h-64 mb-4">
-              <QrReader
-                onScan={webcamScan}
-                legacyMode={false}
-                facingMode={'user'}
-                onError={handleError}
-              />
-            </div> */}
-
+          <div
+            className={`flex justify-center flex-col items-center mt-4 gap-4 ${
+              !openWebcam && 'hidden'
+            }`}
+          >
             <BarcodeScannerComponent
               width="350px"
               height="350px"
               onUpdate={(err: any, result: any) => {
                 if (result) {
-                  setData(result?.text)
+                  setWebcamResult(result?.text)
                 } else {
-                  setData('')
+                  setWebcamResult('')
                 }
               }}
               stopStream={stopStream}
             />
+
+            {/* <ScanQR stopStream={stopStream} /> */}
 
             <Button
               type="button"

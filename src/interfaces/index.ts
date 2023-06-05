@@ -17,8 +17,7 @@ interface ISidebar {
 }
 
 interface IScanQR {
-  onClick: any
-  openWebcam: boolean
+  stopStream: any
 }
 
 export type { IChangePW, IBlur, IAccountInformation, ISidebar, IScanQR }
