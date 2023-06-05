@@ -2,13 +2,19 @@ import { IoIosArrowBack } from 'react-icons/io'
 import Layout from '../../components/layouts'
 import qrCode from 'qrcode'
 import { useForm } from 'react-hook-form'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import MenuAccount from '../../components/menu/menuAccount'
 import QrReader from 'react-qr-reader'
 import Blur from '../../components/blur'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
+import Button from '../../components/button'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+// import BarcodeScannerComponent from 'react-webcam-barcode-scanner'
+const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), { ssr: false })
+
 export default function SetUpQR() {
   const dispatch = useDispatch()
   const nodeRef = useRef(null)
@@ -94,6 +100,10 @@ export default function SetUpQR() {
     setOpenWebcam(false)
   }
 
+  const [data, setData] = useState<string>('Not found')
+  const [stopStream, setStopStream] = useState<boolean>(false)
+  console.log('data >> ', data)
+
   return (
     <>
       <div className="flex flex-col flex-1 cursor-pointer" id="setupQR" ref={nodeRef}>
@@ -166,12 +176,12 @@ export default function SetUpQR() {
                     </div>
                   </div>
 
-                  <button
+                  <Button
                     type="submit"
                     className="bg-blue-500 py-2 px-4 font-medium rounded-md hover:bg-blue-400 transition-all text-white flex mx-auto"
                   >
                     Tạo mã
-                  </button>
+                  </Button>
                 </form>
               </div>
             </div>
@@ -188,56 +198,66 @@ export default function SetUpQR() {
               )}
               <div className="flex lg:flex-col lg:items-center gap-3 text-white text-sm font-medium">
                 {imageQR ? (
-                  <a href={imageQR} download>
-                    <button
+                  <Link href={imageQR} download>
+                    <Button
                       type="button"
                       className="bg-green-500 p-2 rounded-md hover:bg-green-400 transition-all"
                     >
                       Tải xuống
-                    </button>
-                  </a>
+                    </Button>
+                  </Link>
                 ) : (
-                  <button
+                  <Button
                     type="button"
                     className="bg-green-500 p-2 rounded-md hover:bg-green-400 transition-all"
                   >
                     Tải xuống
-                  </button>
+                  </Button>
                 )}
 
-                <button
+                <Button
                   type="button"
                   className="bg-yellow-500 p-2 rounded-md hover:bg-yellow-400 transition-all"
                   onClick={() => setOpenWebcam(true)}
                 >
                   Scan QR có sẵn
-                </button>
+                </Button>
               </div>
 
               {/* <ScanQR onClick={() => setOpenWebcam}></ScanQR> */}
             </div>
           </div>
 
-          <div
-            className={`flex justify-center flex-col items-center mt-8 ${
-              openWebcam == false && 'hidden'
-            }`}
-          >
-            <div className="w-80 h-80 mb-4">
+          <div className="flex justify-center flex-col items-center mt-8 ">
+            {/* <div className="w-64 h-64 mb-4">
               <QrReader
                 onScan={webcamScan}
                 legacyMode={false}
                 facingMode={'user'}
                 onError={handleError}
               />
-            </div>
+            </div> */}
 
-            <button
-              onClick={closeCam}
+            <BarcodeScannerComponent
+              width="350px"
+              height="350px"
+              onUpdate={(err: any, result: any) => {
+                if (result) {
+                  setData(result?.text)
+                } else {
+                  setData('')
+                }
+              }}
+              stopStream={stopStream}
+            />
+
+            <Button
+              type="button"
               className="bg-red-500 p-2 rounded-md hover:bg-red-400 w-fit mx-auto transition-all text-white font-medium"
+              onClick={closeCam}
             >
               Close webcam
-            </button>
+            </Button>
           </div>
         </div>
       </div>

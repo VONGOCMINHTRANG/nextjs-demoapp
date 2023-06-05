@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import QrReader from 'react-qr-reader'
 import { IScanQR } from '../../interfaces'
+import Button from '../button'
 
 export default function ScanQR({ onClick, openWebcam }: IScanQR) {
   const [webcamResult, setWebcamResult] = useState<any>()
@@ -28,7 +29,9 @@ export default function ScanQR({ onClick, openWebcam }: IScanQR) {
           onError={handleError}
         />
       </div>
-      <button onClick={onClick}>Close webcam</button>
+      <Button type="button" onClick={onClick}>
+        Close webcam
+      </Button>
     </div>
   )
 }

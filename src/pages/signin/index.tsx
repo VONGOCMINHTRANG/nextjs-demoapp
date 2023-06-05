@@ -9,6 +9,7 @@ import Logo from '../../../assets/images/logo.svg'
 import Image from 'next/image'
 import Link from 'next/link'
 import useCheckLoggedIn from '../../hooks/useCheckLoggedIn'
+import Button from '../../components/button'
 
 export default function SignIn() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -123,12 +124,12 @@ export default function SignIn() {
                   )}
                 </div>
 
-                <button
+                <Button
                   type="submit"
                   className="w-full text-center py-3 rounded bg-green-600 text-white focus:outline-none my-1"
                 >
                   Sign in
-                </button>
+                </Button>
               </form>
             </div>
 

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../../../config/firebase'
 import LoadingSkeleton from '../loading-skeleton'
+import Button from '../button'
 
 export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
   const [portalDiv, setPortalDiv] = useState<Element | DocumentFragment | null>()
@@ -196,12 +197,12 @@ export default function ChangePassword({ onClick = () => {} }: IChangePW): any {
                     )}
                   </div>
 
-                  <button
+                  <Button
                     type="submit"
                     className="bg-green-500 hover:bg-green-600 text-white w-full rounded-xl p-3 font-medium mt-4 mb-8"
                   >
                     Đổi mật khẩu
-                  </button>
+                  </Button>
                 </form>
               </div>
             </div>

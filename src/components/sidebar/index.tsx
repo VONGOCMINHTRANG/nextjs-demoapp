@@ -22,7 +22,7 @@ import { ISidebar } from '../../interfaces'
 export default function Sidebar({ sidebar }: ISidebar) {
   return (
     <div
-      className={`sidebar fixed xl:relative bottom-0 text-sm font-semibold w-72 xl:w-96 flex bg-white text-black/70 p-4 font-sans shadow-2xl overflow-y-auto lg:overflow-x-hidden lg:overflow-y-auto top-16 h-auto transition-all z-10 ${
+      className={`sidebar fixed xl:relative bottom-0 text-sm font-semibold w-72 xl:w-96 flex bg-white text-black/70 p-4 font-sans shadow-2xl overflow-y-auto lg:overflow-x-hidden lg:overflow-y-auto top-16 transition-all z-10 h-screen ${
         sidebar ? 'visible translate-x-0' : 'invisible -translate-x-full'
       }`}
     >

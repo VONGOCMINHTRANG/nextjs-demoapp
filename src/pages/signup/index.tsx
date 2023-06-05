@@ -10,6 +10,7 @@ import Logo from '../../../assets/images/logo.svg'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 import useCheckLoggedIn from '../../hooks/useCheckLoggedIn'
+import Button from '../../components/button'
 
 export default function SignUp() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -206,12 +207,12 @@ export default function SignUp() {
                   )}
                 </div>
 
-                <button
+                <Button
                   type="submit"
                   className="w-full text-center py-3 rounded bg-green-600 text-white hover:bg-green-dark focus:outline-none my-1"
                 >
                   Create Account
-                </button>
+                </Button>
               </form>
             </div>
 
