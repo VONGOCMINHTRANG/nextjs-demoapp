@@ -1,12 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-
 // Define a type for the slice state
-interface ToggleState {
-  toggleState: boolean
-}
+import { IToggleState } from '../../interfaces'
 
 // Define the initial state using that type
-const initialState: ToggleState = {
+const initialState: IToggleState = {
   toggleState: false,
 }
 

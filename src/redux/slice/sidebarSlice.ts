@@ -1,12 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-
 // Define a type for the slice state
-interface SidebarState {
-  sidebarState: boolean
-}
+import { ISidebarState } from '../../interfaces'
 
 // Define the initial state using that type
-const initialState: SidebarState = {
+const initialState: ISidebarState = {
   sidebarState: false,
 }
 

@@ -20,4 +20,39 @@ interface IScanQR {
   stopStream: any
 }
 
-export type { IChangePW, IBlur, IAccountInformation, ISidebar, IScanQR }
+interface IUser {
+  email: string
+  token: string
+  userId: string
+}
+interface IAuthState {
+  isLoggedIn: boolean
+  loadingLogging?: boolean
+  currentUser?: IUser
+}
+
+interface ISidebarState {
+  sidebarState: boolean
+}
+
+interface IToggleState {
+  toggleState: boolean
+}
+
+interface ILoginPayload {
+  email: string
+  password: string
+}
+
+export type {
+  IChangePW,
+  IBlur,
+  IAccountInformation,
+  ISidebar,
+  IScanQR,
+  IUser,
+  IAuthState,
+  ISidebarState,
+  IToggleState,
+  ILoginPayload,
+}
