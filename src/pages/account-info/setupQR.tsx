@@ -2,19 +2,15 @@ import { IoIosArrowBack } from 'react-icons/io'
 import Layout from '../../components/layouts'
 import qrCode from 'qrcode'
 import { useForm } from 'react-hook-form'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import MenuAccount from '../../components/menu/menuAccount'
-import QrReader from 'react-qr-reader'
 import Blur from '../../components/blur'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
 import Button from '../../components/button'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import ScanQR from '../../components/scanQR'
-// import BarcodeScannerComponent from 'react-webcam-barcode-scanner'
-const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), { ssr: false })
 
 export default function SetUpQR() {
   const dispatch = useDispatch()
@@ -156,6 +152,8 @@ export default function SetUpQR() {
                     Tạo mã
                   </Button>
                 </form>
+
+                <div>{webcamResult}</div>
               </div>
             </div>
             <div className="relative text-black flex items-center flex-col">
@@ -204,7 +202,7 @@ export default function SetUpQR() {
               !openWebcam && 'hidden'
             }`}
           >
-            <BarcodeScannerComponent
+            {/* <BarcodeScannerComponent
               width="350px"
               height="350px"
               onUpdate={(err: any, result: any) => {
@@ -215,17 +213,9 @@ export default function SetUpQR() {
                 }
               }}
               stopStream={stopStream}
-            />
+            /> */}
 
-            {/* <ScanQR stopStream={stopStream} /> */}
-
-            <Button
-              type="button"
-              className="bg-red-500 p-2 rounded-md hover:bg-red-400 w-fit mx-auto transition-all text-white font-medium"
-              onClick={closeCam}
-            >
-              Close webcam
-            </Button>
+            <ScanQR stopStream={stopStream} setWebcamResult={setWebcamResult} closeCam={closeCam} />
           </div>
         </div>
       </div>

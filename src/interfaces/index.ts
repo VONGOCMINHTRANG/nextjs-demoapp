@@ -18,6 +18,8 @@ interface ISidebar {
 
 interface IScanQR {
   stopStream: any
+  setWebcamResult: any
+  closeCam: any
 }
 
 interface IUser {
