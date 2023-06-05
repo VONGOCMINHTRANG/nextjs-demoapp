@@ -10,7 +10,8 @@ import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
 import Button from '../../components/button'
 import Link from 'next/link'
-import ScanQR from '../../components/scanQR'
+import dynamic from 'next/dynamic'
+const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), { ssr: false })
 
 export default function SetUpQR() {
   const dispatch = useDispatch()
@@ -19,12 +20,11 @@ export default function SetUpQR() {
   const [imageQR, setImageQR] = useState<string>('')
   const [, setOpen] = useState<boolean>(true)
   const [openWebcam, setOpenWebcam] = useState<boolean>(false)
-  const [webcamResult, setWebcamResult] = useState<string>('Not found')
+  const [data, setData] = useState<string>('')
   const [stopStream, setStopStream] = useState<boolean>(false)
   const toggle = useSelector((state: any) => state.toggle.toggleState)
   const {
     getValues,
-    setValue,
     handleSubmit,
     formState: { isValid, errors },
     register,
@@ -70,9 +70,10 @@ export default function SetUpQR() {
     const topOfElement = height.offsetHeight - 2000
     window.scroll({ top: topOfElement, behavior: 'smooth' })
     setOpenWebcam(false)
-    setStopStream(false)
+    setStopStream(true)
   }
 
+  console.log('data >> ', data)
   return (
     <>
       <div className="flex flex-col flex-1 cursor-pointer" id="setupQR" ref={nodeRef}>
@@ -153,7 +154,7 @@ export default function SetUpQR() {
                   </Button>
                 </form>
 
-                <div>{webcamResult}</div>
+                <div>{data}</div>
               </div>
             </div>
             <div className="relative text-black flex items-center flex-col">
@@ -202,20 +203,26 @@ export default function SetUpQR() {
               !openWebcam && 'hidden'
             }`}
           >
-            {/* <BarcodeScannerComponent
+            <BarcodeScannerComponent
               width="350px"
               height="350px"
               onUpdate={(err: any, result: any) => {
                 if (result) {
-                  setWebcamResult(result?.text)
+                  setData(result?.text)
                 } else {
-                  setWebcamResult('')
+                  setData('')
                 }
               }}
               stopStream={stopStream}
-            /> */}
+            />
 
-            <ScanQR stopStream={stopStream} setWebcamResult={setWebcamResult} closeCam={closeCam} />
+            <Button
+              type="button"
+              className="bg-red-500 p-2 rounded-md hover:bg-red-400 w-fit mx-auto transition-all text-white font-medium"
+              onClick={closeCam}
+            >
+              Close webcam
+            </Button>
           </div>
         </div>
       </div>
