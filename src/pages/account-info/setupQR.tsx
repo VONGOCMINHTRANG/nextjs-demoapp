@@ -16,11 +16,10 @@ const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner')
 export default function SetUpQR() {
   const dispatch = useDispatch()
   const nodeRef = useRef(null)
-  const height: any = nodeRef.current
   const [imageQR, setImageQR] = useState<string>('')
   const [, setOpen] = useState<boolean>(true)
   const [openWebcam, setOpenWebcam] = useState<boolean>(false)
-  const [data, setData] = useState<string>('')
+  const [data, setData] = useState<string>('Scan QR data')
   const [stopStream, setStopStream] = useState<boolean>(false)
   const toggle = useSelector((state: any) => state.toggle.toggleState)
   const {
@@ -61,19 +60,24 @@ export default function SetUpQR() {
     })
   }
 
-  const closeCam = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: true,
-    })
+  const openCam = async () => {
+    const height: any = nodeRef.current
+    const bottomOfElement = height.offsetHeight + 200
+    window.scroll({ top: bottomOfElement, behavior: 'smooth' })
+    setOpenWebcam(true)
+    setStopStream(false)
+  }
 
+  const closeCam = async () => {
+    const height: any = nodeRef.current
     const topOfElement = height.offsetHeight - 2000
     window.scroll({ top: topOfElement, behavior: 'smooth' })
     setOpenWebcam(false)
     setStopStream(true)
   }
 
-  console.log('data >> ', data)
+  console.log(data)
+
   return (
     <>
       <div className="flex flex-col flex-1 cursor-pointer" id="setupQR" ref={nodeRef}>
@@ -154,7 +158,7 @@ export default function SetUpQR() {
                   </Button>
                 </form>
 
-                <div>{data}</div>
+                <div className="text-black">{data}</div>
               </div>
             </div>
             <div className="relative text-black flex items-center flex-col">
@@ -190,7 +194,7 @@ export default function SetUpQR() {
                 <Button
                   type="button"
                   className="bg-yellow-500 p-2 rounded-md hover:bg-yellow-400 transition-all"
-                  onClick={() => setOpenWebcam(true)}
+                  onClick={openCam}
                 >
                   Scan QR có sẵn
                 </Button>
