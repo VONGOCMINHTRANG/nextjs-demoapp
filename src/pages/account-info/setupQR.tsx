@@ -76,7 +76,7 @@ export default function SetUpQR() {
     setStopStream(true)
   }
 
-  console.log(data)
+  console.log('data >> ', data)
 
   return (
     <>
@@ -174,14 +174,14 @@ export default function SetUpQR() {
               )}
               <div className="flex lg:flex-col lg:items-center gap-3 text-white text-sm font-medium">
                 {imageQR ? (
-                  <Link href={imageQR} download>
+                  <a href={imageQR} download>
                     <Button
                       type="button"
                       className="bg-green-500 p-2 rounded-md hover:bg-green-400 transition-all"
                     >
                       Tải xuống
                     </Button>
-                  </Link>
+                  </a>
                 ) : (
                   <Button
                     type="button"
