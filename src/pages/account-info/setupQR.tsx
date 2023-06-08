@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setToggle } from '../../redux/slice/toggleSlice'
 import ChangePassword from '../../components/change-password'
 import Button from '../../components/button'
-import Link from 'next/link'
 import dynamic from 'next/dynamic'
 const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), { ssr: false })
 
@@ -103,15 +102,17 @@ export default function SetUpQR() {
                   <div className="mb-8 flex flex-col">
                     <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
                       <span className="text-black">Tên tài khoản</span>
-                      <input
-                        type="text"
-                        className="border-2 w-full md:w-72  p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
-                        placeholder="Nhập tên tài khoản"
-                        {...register('fullname', { required: true })}
-                      />
-                      {errors?.fullname?.type === 'required' && (
-                        <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
-                      )}
+                      <div>
+                        <input
+                          type="text"
+                          className="border-2 w-full md:w-72  p-1 outline-none focus:ring-1 text-black placeholder:italic rounded-md"
+                          placeholder="Nhập tên tài khoản"
+                          {...register('fullname', { required: true })}
+                        />
+                        {errors?.fullname?.type === 'required' && (
+                          <div className="text-red-500 text-xs italic">Vui lòng không bỏ trống</div>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-y-2 justify-between text-sm border-dotted border-b-2 py-3">
